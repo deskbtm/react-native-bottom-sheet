@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["BottomSheetModule"]
+  },
+  "android": {
+    "modules": ["com.deskbtm.rn.bottomsheet.BottomSheetModule"]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@deskbtm-rn/bottom-sheet": ["../src/index"],
+      "@deskbtm-rn/bottom-sheet/*": ["../src/*"],
+      "bottom-sheet": ["../src/index"],
+      "bottom-sheet/*": ["../src/*"]
+    }
+  }
+}
