@@ -1,30 +1,24 @@
+import { Button, Text } from '@react-navigation/elements';
 import { useRef } from 'react';
 import {
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+	Pressable,
+	RefreshControl,
+	Text as RNText,
+	ScrollView,
+	StyleSheet,
+	View,
 } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
-import {
-    SafeAreaProvider,
-    SafeAreaView,
-    useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
-    BottomSheetFlatList,
-    BottomSheetModal,
-    BottomSheetProvider,
-    BottomSheetScrollView,
-    BottomSheetTextInput,
-    BottomSheetView,
-    useBottomSheet,
-    useBottomSheetContent,
-    type BottomSheetModalRef,
+	BottomSheetFlatList,
+	BottomSheetModal,
+	BottomSheetScrollView,
+	BottomSheetTextInput,
+	BottomSheetView,
+	useBottomSheet,
+	useBottomSheetContent,
+	type BottomSheetModalRef,
 } from '@deskbtm-rn/bottom-sheet';
 
 const LIST_DEMO_DATA = Array.from({ length: 30 }, (_, index) => `Item ${index + 1}`);
@@ -39,10 +33,10 @@ function SheetScrollDemo() {
 				<RefreshControl refreshing={false} onRefresh={() => console.log('refresh')} />
 			}
 		>
-			<Text style={styles.sheetTitle}>Scrollable Sheet</Text>
-			<Text style={styles.sheetSubtitle}>
+			<RNText style={styles.sheetTitle}>Scrollable Sheet</RNText>
+			<RNText style={styles.sheetSubtitle}>
 				FlatList, ScrollView, pull-to-refresh, and keyboard-aware TextInput are supported.
-			</Text>
+			</RNText>
 			<BottomSheetTextInput
 				placeholder="BottomSheetTextInput"
 				style={styles.input}
@@ -50,19 +44,19 @@ function SheetScrollDemo() {
 			/>
 			<View style={styles.rowActions}>
 				<Pressable style={styles.secondaryButton} onPress={collapse}>
-					<Text style={styles.secondaryButtonText}>Collapse</Text>
+					<RNText style={styles.secondaryButtonText}>Collapse</RNText>
 				</Pressable>
 				<Pressable style={styles.secondaryButton} onPress={expand}>
-					<Text style={styles.secondaryButtonText}>Expand</Text>
+					<RNText style={styles.secondaryButtonText}>Expand</RNText>
 				</Pressable>
 			</View>
 			{Array.from({ length: 20 }, (_, index) => (
 				<View key={index} style={styles.sheetRow}>
-					<Text>Scroll row {index + 1}</Text>
+					<RNText>Scroll row {index + 1}</RNText>
 				</View>
 			))}
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close Sheet</Text>
+				<RNText style={styles.closeButtonText}>Close Sheet</RNText>
 			</Pressable>
 		</BottomSheetScrollView>
 	);
@@ -78,20 +72,20 @@ function SheetListDemo() {
 			contentContainerStyle={styles.sheetInner}
 			renderItem={({ item }) => (
 				<View style={styles.sheetRow}>
-					<Text>{item}</Text>
+					<RNText>{item}</RNText>
 				</View>
 			)}
 			ListHeaderComponent={
 				<View style={styles.listHeader}>
-					<Text style={styles.sheetTitle}>FlatList Sheet</Text>
-					<Text style={styles.sheetSubtitle}>
+					<RNText style={styles.sheetTitle}>FlatList Sheet</RNText>
+					<RNText style={styles.sheetSubtitle}>
 						Scroll the list, then drag the handle to resize or dismiss.
-					</Text>
+					</RNText>
 				</View>
 			}
 			ListFooterComponent={
 				<Pressable style={styles.closeButton} onPress={close}>
-					<Text style={styles.closeButtonText}>Close Sheet</Text>
+					<RNText style={styles.closeButtonText}>Close Sheet</RNText>
 				</Pressable>
 			}
 		/>
@@ -104,13 +98,13 @@ function StackedSheetInner() {
 
 	return (
 		<BottomSheetView style={styles.sheetInner}>
-			<Text style={styles.sheetTitle}>Stacked sheet #{presentedSheetCount}</Text>
-			<Text style={styles.sheetSubtitle}>Swipe down or tap to close this level.</Text>
+			<RNText style={styles.sheetTitle}>Stacked sheet #{presentedSheetCount}</RNText>
+			<RNText style={styles.sheetSubtitle}>Swipe down or tap to close this level.</RNText>
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close top</Text>
+				<RNText style={styles.closeButtonText}>Close top</RNText>
 			</Pressable>
 			<Pressable style={styles.secondaryButton} onPress={dismissAll}>
-				<Text style={styles.secondaryButtonText}>Dismiss all</Text>
+				<RNText style={styles.secondaryButtonText}>Dismiss all</RNText>
 			</Pressable>
 		</BottomSheetView>
 	);
@@ -122,11 +116,11 @@ function StackedSheetDemo() {
 
 	return (
 		<BottomSheetView style={styles.sheetInner}>
-			<Text style={styles.sheetTitle}>Stacked sheets (iOS cards)</Text>
-			<Text style={styles.sheetSubtitle}>
+			<RNText style={styles.sheetTitle}>Stacked sheets (iOS cards)</RNText>
+			<RNText style={styles.sheetSubtitle}>
 				Depth: {presentedSheetCount}. Push another sheet — the one below shrinks and peeks
 				behind.
-			</Text>
+			</RNText>
 			<Pressable
 				style={styles.demoButton}
 				onPress={() =>
@@ -136,10 +130,10 @@ function StackedSheetDemo() {
 					})
 				}
 			>
-				<Text style={styles.demoButtonText}>Push stacked sheet</Text>
+				<RNText style={styles.demoButtonText}>Push stacked sheet</RNText>
 			</Pressable>
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close</Text>
+				<RNText style={styles.closeButtonText}>Close</RNText>
 			</Pressable>
 		</BottomSheetView>
 	);
@@ -150,12 +144,12 @@ function PushSheetDemo() {
 
 	return (
 		<BottomSheetView style={styles.sheetInner}>
-			<Text style={styles.sheetTitle}>Push layout</Text>
-			<Text style={styles.sheetSubtitle}>
+			<RNText style={styles.sheetTitle}>Push layout</RNText>
+			<RNText style={styles.sheetSubtitle}>
 				Host screen and sheet get rounded corners with a gap between them.
-			</Text>
+			</RNText>
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close Sheet</Text>
+				<RNText style={styles.closeButtonText}>Close Sheet</RNText>
 			</Pressable>
 		</BottomSheetView>
 	);
@@ -166,12 +160,12 @@ function MaskDemo() {
 
 	return (
 		<BottomSheetView style={styles.sheetInner}>
-			<Text style={styles.sheetTitle}>Sheet mask</Text>
-			<Text style={styles.sheetSubtitle}>
+			<RNText style={styles.sheetTitle}>Sheet mask</RNText>
+			<RNText style={styles.sheetSubtitle}>
 				Mask sits above the sheet body only. Sheet content here stays tappable.
-			</Text>
+			</RNText>
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close Sheet</Text>
+				<RNText style={styles.closeButtonText}>Close Sheet</RNText>
 			</Pressable>
 		</BottomSheetView>
 	);
@@ -182,10 +176,10 @@ function DynamicSheetDemo() {
 
 	return (
 		<BottomSheetView style={styles.sheetInner}>
-			<Text style={styles.sheetTitle}>Dynamic Sizing</Text>
-			<Text style={styles.sheetSubtitle}>
+			<RNText style={styles.sheetTitle}>Dynamic Sizing</RNText>
+			<RNText style={styles.sheetSubtitle}>
 				This sheet grows with its content when `enableDynamicSizing` is enabled.
-			</Text>
+			</RNText>
 			<BottomSheetTextInput
 				placeholder="Type to grow content"
 				style={styles.input}
@@ -193,13 +187,13 @@ function DynamicSheetDemo() {
 				accessibilityLabel="Dynamic sheet text input"
 			/>
 			<Pressable style={styles.closeButton} onPress={close}>
-				<Text style={styles.closeButtonText}>Close Sheet</Text>
+				<RNText style={styles.closeButtonText}>Close Sheet</RNText>
 			</Pressable>
 		</BottomSheetView>
 	);
 }
 
-function DemoScreen() {
+export function Home() {
 	const { present } = useBottomSheet();
 	const insets = useSafeAreaInsets();
 	const scrollModalRef = useRef<BottomSheetModalRef>(null);
@@ -217,10 +211,17 @@ function DemoScreen() {
 				keyboardShouldPersistTaps="handled"
 				showsVerticalScrollIndicator={false}
 			>
-				<Text style={styles.heading}>@deskbtm-rn/bottom-sheet</Text>
+				<Text style={styles.heading}>Home Screen</Text>
 				<Text style={styles.description}>
 					iOS-style sheet presentation with gorhom-like API on iOS, Android, and Web.
 				</Text>
+
+				<Button screen="Profile" params={{ user: 'jane' }}>
+					Go to Profile
+				</Button>
+				<Button screen="Settings" params={{}}>
+					Go to Settings
+				</Button>
 
 				<Pressable
 					style={styles.demoButton}
@@ -334,24 +335,7 @@ function DemoScreen() {
 	);
 }
 
-export default function App() {
-	return (
-		<GestureHandlerRootView style={styles.root}>
-			<SafeAreaProvider>
-				<KeyboardProvider preload={false}>
-					<BottomSheetProvider mode="presentation">
-						<DemoScreen />
-					</BottomSheetProvider>
-				</KeyboardProvider>
-			</SafeAreaProvider>
-		</GestureHandlerRootView>
-	);
-}
-
 const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-	},
 	container: {
 		flex: 1,
 	},

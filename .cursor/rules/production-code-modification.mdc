@@ -1,0 +1,191 @@
+---
+description: Conservative production code modification — minimal diffs, preserve behavior, scope control.
+alwaysApply: true
+---
+
+# Conservative Production Code Modification Rules
+
+You are working on a production codebase.
+
+## Primary Principle
+
+Make the smallest possible change required to satisfy the request.
+
+Assume all existing code is intentional, tested, and working correctly unless explicitly stated otherwise.
+
+Favor precision over creativity.
+
+---
+
+## Modification Restrictions
+
+### DO
+
+* Modify only the code directly related to the requested task.
+* Prefer patch-style changes over rewrites.
+* Preserve existing behavior whenever possible.
+* Maintain backward compatibility.
+* Reuse existing project patterns and conventions.
+* Ask for clarification when requirements are ambiguous.
+* Explain the impact before making significant changes.
+
+### DO NOT
+
+* Refactor unrelated code.
+* Rename variables, functions, classes, files, folders, or exports without explicit instruction.
+* Change existing business logic unless explicitly requested.
+* Modify public APIs, interfaces, types, schemas, or contracts without approval.
+* Reorganize project structure.
+* Upgrade, downgrade, add, or remove dependencies.
+* Introduce new frameworks, libraries, patterns, or architectural approaches.
+* Change coding style solely for consistency.
+* Remove existing code unless explicitly required.
+* Fix unrelated issues opportunistically.
+* Make assumptions about intended behavior.
+* Replace existing implementations with alternative solutions simply because they appear better.
+
+---
+
+## Existing Code Preservation Policy
+
+Treat all existing tested code as correct.
+
+Unless explicitly instructed:
+
+* Do not alter runtime behavior.
+* Do not change state management logic.
+* Do not modify data flow.
+* Do not change error handling behavior.
+* Do not alter edge-case behavior.
+* Do not modify performance characteristics.
+* Do not change component lifecycles.
+* Do not change rendering behavior.
+* Do not change navigation behavior.
+* Do not change persistence behavior.
+
+If a requested change could affect any of the above, stop and ask for confirmation.
+
+---
+
+## Architecture Preservation
+
+Maintain the existing architecture.
+
+Do not replace existing implementations with alternative libraries, hooks, patterns, abstractions, or architectural approaches unless explicitly requested.
+
+Examples of prohibited substitutions:
+
+* useState → Zustand
+* Context → Redux
+* fetch → React Query / SWR
+* FlatList → FlashList
+* React Navigation → Expo Router
+* Existing Hooks → Custom Framework Abstractions
+
+Keep the current architecture intact.
+
+---
+
+## Scope Control
+
+Stay strictly within the requested scope.
+
+If additional issues are discovered:
+
+* Report them separately.
+* Explain their potential impact.
+* Do not fix them automatically.
+
+Never combine multiple changes into a single task unless explicitly requested.
+
+---
+
+## Planning Requirements
+
+Before making changes:
+
+1. Summarize the requested change.
+2. Identify affected files.
+3. Explain why each file needs modification.
+4. Describe expected impact.
+5. Highlight risks.
+
+For medium or large changes, provide a plan first and wait for approval.
+
+---
+
+## Code Generation Rules
+
+* Generate the smallest diff possible.
+* Prefer additive changes over destructive changes.
+* Avoid rewriting entire files when a localized change is sufficient.
+* Reuse existing utilities and helpers before creating new ones.
+* Reuse existing patterns from the codebase.
+* Preserve comments unless they become inaccurate.
+* Preserve formatting conventions already used in the file.
+* Avoid introducing new abstractions unless necessary.
+* Avoid moving code unless required.
+* Avoid touching unrelated lines.
+
+---
+
+## Safety Stop Conditions
+
+Stop and ask for confirmation if the change would:
+
+* Affect existing user-facing behavior.
+* Break backward compatibility.
+* Change API contracts.
+* Modify database schemas.
+* Change authentication or authorization logic.
+* Require data migration.
+* Remove existing functionality.
+* Affect deployment processes.
+* Affect analytics, tracking, payments, notifications, or security mechanisms.
+
+When uncertain, ask instead of guessing.
+
+---
+
+## Large File Protection
+
+When modifying large files:
+
+* Change only the relevant section.
+* Do not rewrite the entire file.
+* Do not reorder code.
+* Do not reorganize imports unless required for the task.
+* Do not perform cleanup outside the requested scope.
+
+---
+
+## Deletion Policy
+
+Existing code should be preserved by default.
+
+Unless explicitly instructed:
+
+* Do not delete functions.
+* Do not delete components.
+* Do not delete files.
+* Do not delete configuration.
+* Do not delete comments.
+* Do not remove fallback logic.
+
+Prefer extending existing implementations rather than replacing them.
+
+---
+
+## Output Format
+
+Always provide:
+
+1. Summary of requested change
+2. Files to be modified
+3. Proposed approach
+4. Code changes
+5. Risk assessment
+
+Never perform unrelated improvements.
+
+When uncertain, stop and ask for clarification instead of making assumptions.

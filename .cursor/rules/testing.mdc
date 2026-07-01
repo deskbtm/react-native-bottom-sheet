@@ -1,0 +1,58 @@
+---
+description: Test file placement, naming, and tooling conventions.
+alwaysApply: true
+---
+
+# Testing
+
+## Tooling
+
+- **Unit:** Jest + `jest-expo` (`pnpm test`, `pnpm test:watch`, `pnpm test:ci`)
+- **Setup / shared helpers:** `tests/` at repo root (e.g. `tests/jest.setup.ts`)
+- **E2E:** `e2e/` at repo root
+
+## Where tests live
+
+| Kind | Location | Example |
+|------|----------|---------|
+| Unit | `__tests__/` next to the source | `src/components/bottom-sheet/__tests__/constants.test.ts` |
+| E2E | `e2e/` at repo root | `e2e/onboarding.spec.ts` |
+
+### Unit tests
+
+Place unit tests in a `__tests__` folder **inside the same directory** as the code under test.
+
+```
+src/components/bottom-sheet/
+  constants.ts
+  resolveOptions.ts
+  __tests__/
+    constants.test.ts
+    resolveOptions.test.ts
+```
+
+- Mirror the source file name: `moduleName.test.ts` (or `.tsx` when needed)
+- Import via `@/*` aliases; prefer the public barrel when the symbol is exported there
+- Do **not** put unit tests in the root `tests/` folder — that directory is for shared setup and helpers only
+
+Unit tests cover utilities, stores, hooks, pure functions, and other isolated logic. They are **not** UI or snapshot tests; use E2E for full user flows.
+
+### E2E tests
+
+All end-to-end tests go in **`e2e/`** at the project root — never under `src/` or `__tests__/`.
+
+```
+e2e/
+  app-launch.spec.ts
+  bottom-sheet-flow.spec.ts
+```
+
+## When to add tests
+
+- Add unit tests for non-trivial pure functions, state logic, and hook behavior
+- Add E2E tests for critical user flows that span multiple screens
+- Skip tests that only assert obvious wiring or framework defaults
+
+## After changes
+
+Run `pnpm test` (or `pnpm test:ci` in CI) and ensure new tests pass.

@@ -1,0 +1,100 @@
+---
+description: Git workflow — Conventional Commits, commit hygiene, and safety practices.
+alwaysApply: true
+---
+
+# Git
+
+## Conventional Commits
+
+All commit messages MUST follow [Conventional Commits](https://www.conventionalcommits.org/).
+
+### Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- **Subject line:** imperative mood, lowercase after the colon, no trailing period, **≤ 72 characters**.
+- **Body:** wrap at 100 characters; explain **why**, not what (the diff shows what).
+- **Footer:** breaking changes, issue refs (`Closes #123`), co-authors.
+
+### Types
+
+| Type | Use when |
+|------|----------|
+| `feat` | New user-facing feature or capability |
+| `fix` | Bug fix |
+| `docs` | Documentation only (`AGENTS.md`, README, JSDoc) |
+| `style` | Formatting, whitespace — no logic change |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `perf` | Performance improvement |
+| `test` | Adding or correcting tests |
+| `build` | Build system, native config, EAS, dependencies for build |
+| `ci` | CI/CD workflows (`.github/`, EAS workflows) |
+| `chore` | Maintenance that doesn't fit above (tooling config, scripts) |
+| `revert` | Reverts a previous commit |
+
+### Scopes (optional)
+
+Use a short, lowercase noun when the change is localized:
+
+`bottom-sheet`, `navigation`, `camera`, `android`, `ios`, `eas`, `deps`, `lint`, `assets`
+
+Omit scope when the change spans multiple areas.
+
+### Breaking changes
+
+Add `!` after type/scope **or** a footer:
+
+```
+feat(bottom-sheet)!: remove legacy present API
+
+BREAKING CHANGE: useBottomSheet().present() now requires options object.
+```
+
+### Examples
+
+```
+feat(bottom-sheet): add keyboard-aware push layout
+```
+
+```
+fix(android): use icon.png for adaptive icon foreground
+```
+
+```
+chore(deps): bump pnpm to 11.5.1
+```
+
+```
+docs: add git rules to AGENTS.md
+```
+
+### Do NOT
+
+- Start with `Update`, `Refactor`, `Enhance`, or other non-standard prefixes.
+- Write vague subjects: `fix stuff`, `wip`, `changes`, `first commit`.
+- Combine unrelated changes in one commit.
+- Exceed 72 characters on the subject line.
+
+### When creating commits
+
+1. Pick the **single most accurate type** for the change set.
+2. One logical change per commit; split if types would differ.
+3. Subject focuses on **intent and impact**, not file names.
+4. Use HEREDOC for multi-line messages:
+
+```bash
+git commit -m "$(cat <<'EOF'
+fix(android): use icon.png for adaptive icon
+
+Remove separate foreground/background/monochrome assets from app.json.
+
+EOF
+)"
+```

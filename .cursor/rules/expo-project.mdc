@@ -1,0 +1,124 @@
+---
+description: Core Expo 56 project standards — layout, naming, oxfmt, oxlint, modules, React Compiler.
+alwaysApply: true
+---
+
+# Expo / React Native — Project Standards
+
+## 1. Docs & tooling
+
+- **Expo SDK 56:** https://docs.expo.dev/versions/v56.0.0/ — check before unfamiliar APIs.
+- **Context7:** use for library docs, setup, and configuration when not certain.
+
+## 2. Formatting & lint
+
+**oxfmt** (`oxfmt.config.ts`) — tabs, width 100, single quotes. After edits: `pnpm fmt` or `pnpm exec oxfmt --write <paths>`.
+
+**oxlint** (`oxlint.config.ts`) — all generated or edited TypeScript/JavaScript must pass. Treat lint failures as blocking; fix the code, not workarounds.
+
+| Item | Value |
+|------|-------|
+| Command | `pnpm oxlint` |
+| Scope | Type-aware (`options.typeAware: true`) |
+| Severity | `correctness` → **error** |
+| Plugins | `typescript`, `unicorn`, `oxc` |
+
+Before finishing a task: run `pnpm oxlint` on touched paths, fix every error, then `pnpm fmt` if formatting drifted.
+
+Write code that lint accepts:
+
+- Strict, explicit types; avoid `any` and unsafe casts.
+- Handle promises (`await`, `.catch()`, `void`, `Promise.all`) — no floating promises.
+- Remove unused imports, variables, and parameters.
+- Match existing file patterns; do not add inline disable comments unless truly unavoidable.
+- Test files (`**/__tests__/**`) follow the same rules unless `oxlint.config.ts` ignores them.
+
+If a rule is wrong for the project, change `oxlint.config.ts` — do not silently ignore it. Do not use Prettier/Biome defaults or add `.eslintrc*` unless the repo adopts them.
+
+## 3. Code layout
+
+| Area | Convention |
+|------|------------|
+| Feature modules | `src/components/<feature-kebab>/` + `index.ts` public barrel |
+| Screens / nav | `src/navigation/` (`screens/`, navigators) |
+| Imports | `@/*` → `src/*` (see `tsconfig.json`) |
+| Shared UI | `src/components/` only when reused across features |
+
+Organize **by feature inside each folder**, not a separate global `features/` tree unless the repo already uses one.
+
+## 4. Naming
+
+**Code:** `camelCase` variables/functions · `PascalCase` components/types · `kebab-case` directories.
+
+**Files** (name must match primary export):
+
+| Kind | File | Export |
+|------|------|--------|
+| Component / Provider / screen | `PascalCase.tsx` | same PascalCase |
+| Hook | `useCamelCase.ts` | `useCamelCase` |
+| Context | `PascalCaseContext.tsx` | context + `use*` hook |
+| Types | `types.ts` | types only |
+| Utilities / worklets | `camelCase.ts` | named functions |
+| Barrel | `index.ts` | re-exports only |
+
+- ✅ `UserAvatar.tsx` → `UserAvatar`
+- ❌ `user-avatar.tsx`, `avatar.tsx`, deep imports past the barrel
+
+## 5. TypeScript & components
+
+- Strict typing; `interface` for props; avoid `any`.
+- Functional components + hooks only (no class components).
+- Prefer `function Component(props: Props)` over `React.FC` unless the file already uses `FC`.
+
+## 6. Module design
+
+**Cohesion** — one module, one job (gesture, overlay, and state for a feature stay in that feature's folder, not on screens).
+
+**Coupling** — small public API via `index.ts`; screens consume documented hooks and types from the barrel, not registry/internals.
+
+- ✅ Screen imports `useFeatureModule()` + public types from `@/components/feature-module`
+- ❌ Screen imports internal helpers, context providers, or registry utilities from deep paths
+
+Prefer composition (`children`, callbacks, typed options) over cross-feature imports.
+
+## 7. Comments & public API docs
+
+- Default: self-explanatory code; **no** line-by-line noise.
+- **Do** comment non-obvious *why*: gesture math, animation timing, platform quirks, race conditions, workarounds.
+- English for comments and JSDoc.
+
+Exported items under `src/components/`, `src/hooks/`, shared `src/**` utilities:
+
+1. Short module or JSDoc purpose blurb  
+2. `@example` for integration (copy-paste friendly, real import paths)  
+3. `@param` / `@returns` on non-obvious public options  
+
+Internal helpers: examples only when logic is unusually complex.
+
+## 8. React Compiler
+
+Enabled in `app.json` (`experiments.reactCompiler`, mode **`infer`**).
+
+- Auto-compiled: PascalCase JSX components, `use*` hooks that call hooks, `"use memo"` utilities.
+- Not compiled: plain lowercase helpers unless `"use memo"`.
+- Opt out: `"use no memo"` when render-time side effects are required.
+
+**Do not** add `memo` / `useCallback` / `useMemo` only to avoid re-renders — remove redundant manual memo when touching a file.
+
+## 9. Deprecated APIs
+
+- No new usage of `@deprecated` or doc-marked legacy APIs.
+- Migrate to documented successors (e.g. native stack navigator, Reanimated over legacy `Animated`).
+- If unavoidable (peer dep): one-line comment + migration link.
+
+## 10. Avoid generic templates
+
+Do not reintroduce patterns this project intentionally removed unless explicitly adopted:
+
+| ❌ Do not | ✅ Use instead |
+|----------|----------------|
+| Global `features/` directory tree | `src/components/<feature-kebab>/` (§3) |
+| Mandatory `React.FC` on every component | `function Component(props: Props)` (§5) |
+| Separate `.styles.ts` per component | `StyleSheet.create()` co-located in the same file |
+
+Only revert to the left column if the team explicitly decides to adopt that pattern repo-wide.

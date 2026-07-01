@@ -1,0 +1,26 @@
+---
+description: RN UI performance — lists, render work, styling. Applied when editing app source.
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React Native — UI Performance
+
+Apply when changing screens, lists, or animated UI. Core naming and module rules live in `expo-project.mdc`.
+
+## Render & lists
+
+- Keep expensive work out of render; move to effects, worklets, or plain utilities.
+- **FlatList / SectionList:** tune `removeClippedSubviews`, `maxToRenderPerBatch`, `windowSize`; use `getItemLayout` when row height is fixed.
+- Avoid anonymous inline functions as list `renderItem` when they force avoidable child re-renders (compiler helps, but stable handlers still matter for heavy rows).
+
+## Styling & assets
+
+- Prefer `StyleSheet.create()` for non-trivial styles (co-located in the same file is fine; separate `.styles.ts` only when a screen file grows large).
+- Consider screen size and safe areas; use `react-native-safe-area-context` on edge-to-edge layouts.
+- Use RN-friendly image libraries (e.g. `expo-image`) for large or remote assets — not unoptimized `<Image>` hot paths.
+
+## Runtime
+
+- Respect RN threading: gesture and animation on UI thread (Reanimated worklets); avoid blocking the JS thread during scroll and transitions.
+- Navigation: React Navigation patterns for stacks, tabs, and deep links.
