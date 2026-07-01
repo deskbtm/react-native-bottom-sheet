@@ -19,3 +19,11 @@ _Avoid_: styling, appearance config
 **DEFAULT_LAYOUT_OPTIONS**:
 The fully merged default layout configuration object, built from `constants.ts`. Exported for documentation and typing; consumers override via the `layout` prop with deep partial merge.
 _Avoid_: constants, DEFAULT_CONFIG
+
+**Host subtree**:
+The app content rendered inside `BottomSheetHost` — navigation screens and other provider children. It must not re-render when sheets open or close; only provider-level changes (such as theme or screen dimensions) may update it.
+_Avoid_: app tree, children, host layer
+
+**Overlay subtree**:
+The sheet stack, backdrop, and letterbox rendered beside the host. It updates when sheets are presented or dismissed.
+_Avoid_: overlay layer, modal tree

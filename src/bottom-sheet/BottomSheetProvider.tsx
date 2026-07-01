@@ -61,7 +61,17 @@ export function BottomSheetProvider({
 							{ backgroundColor: engine.mergedTheme.hostBackgroundColor },
 						]}
 					>
-						<BottomSheetHostShell engine={engine}>{children}</BottomSheetHostShell>
+						<BottomSheetHostShell
+							hostLayoutMode={engine.activeHostMode}
+							progress={engine.bottomProgress}
+							sheetTopY={engine.hostSheetTopY}
+							pushProgressOpenY={engine.pushProgressOpenY}
+							screenHeight={engine.screenHeight}
+							screenWidth={engine.screenWidth}
+							layout={engine.mergedLayout}
+						>
+							{children}
+						</BottomSheetHostShell>
 						<BottomSheetOverlayHost engine={engine} />
 					</View>
 				</BottomSheetModalRegistryProvider>

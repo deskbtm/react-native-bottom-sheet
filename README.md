@@ -52,13 +52,15 @@ This repo is an [Expo module](https://docs.expo.dev/modules/overview/) scaffold 
 ```bash
 cd bottom-sheet
 pnpm install
-pnpm build
 
 # Start the example app (iOS / Android / Web)
+# Metro resolves `react-native` → `src/index.ts`; no build step for local dev.
 cd example
 pnpm start
 pnpm ios      # or pnpm android / pnpm web
 ```
+
+Run `pnpm build` before publishing or when you need `build/` types for non-Metro tooling. `prepublishOnly` runs the build automatically on `npm publish`.
 
 From the module root you can also use:
 

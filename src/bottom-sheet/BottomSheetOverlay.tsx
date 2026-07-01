@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -13,7 +14,12 @@ import { BottomSheetContentContext } from './BottomSheetContentContext';
 import { BottomSheetHandle } from './BottomSheetHandle';
 import { BottomSheetMask } from './BottomSheetMask';
 import { BottomSheetScrollView } from './BottomSheetScrollables';
-import type { BottomSheetControllerApi, BottomSheetLayoutOptions, BottomSheetState } from './types';
+import type {
+	BottomSheetContentContextValue,
+	BottomSheetControllerApi,
+	BottomSheetLayoutOptions,
+	BottomSheetState,
+} from './types';
 import { useBottomSheetController } from './useBottomSheetController';
 import { usePushSheetCardStyle, usePushSheetScaleStyle } from './usePushSheetStyle';
 import { useStackCardStyle } from './useStackCardStyle';
@@ -94,20 +100,36 @@ export function BottomSheetOverlay({
 		layout,
 	);
 
-	const internalContextValue = {
-		animatedIndex: controller.animatedIndex,
-		animatedPosition: controller.animatedPosition,
-		scrollOffset: controller.scrollOffset,
-		snapToIndex: controller.snapToIndex,
-		close: controller.closeSheet,
-		expand: controller.expand,
-		collapse: controller.collapse,
-		enableContentPanningGesture: controller.enableContentPanningGesture,
-		enableDynamicSizing: controller.enableDynamicSizing,
-		bottomInset: insets.bottom,
-		onContentLayout: controller.onContentLayout,
-		sheetDragGesture: controller.sheetDragGesture,
-	};
+	const internalContextValue = useMemo(
+		(): BottomSheetContentContextValue => ({
+			animatedIndex: controller.animatedIndex,
+			animatedPosition: controller.animatedPosition,
+			scrollOffset: controller.scrollOffset,
+			snapToIndex: controller.snapToIndex,
+			close: controller.closeSheet,
+			expand: controller.expand,
+			collapse: controller.collapse,
+			enableContentPanningGesture: controller.enableContentPanningGesture,
+			enableDynamicSizing: controller.enableDynamicSizing,
+			bottomInset: insets.bottom,
+			onContentLayout: controller.onContentLayout,
+			sheetDragGesture: controller.sheetDragGesture,
+		}),
+		[
+			controller.animatedIndex,
+			controller.animatedPosition,
+			controller.collapse,
+			controller.closeSheet,
+			controller.enableContentPanningGesture,
+			controller.enableDynamicSizing,
+			controller.expand,
+			controller.onContentLayout,
+			controller.scrollOffset,
+			controller.sheetDragGesture,
+			controller.snapToIndex,
+			insets.bottom,
+		],
+	);
 
 	const dynamicContentPaddingStyle = useAnimatedStyle(() => {
 		const keyboard = controller.keyboardOffset.value;

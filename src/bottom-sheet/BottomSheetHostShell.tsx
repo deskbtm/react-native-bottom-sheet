@@ -1,28 +1,45 @@
 import { memo, type ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 
 import { BottomSheetHost } from './BottomSheetHost';
-import type { BottomSheetEngine } from './useBottomSheetEngine';
+import type { HostLayoutMode } from './hostLayoutMode';
+import type { BottomSheetLayoutOptions } from './types';
 
-interface BottomSheetHostShellProps {
-	engine: BottomSheetEngine;
+export interface BottomSheetHostShellProps {
 	children: ReactNode;
+	hostLayoutMode: SharedValue<HostLayoutMode>;
+	progress: SharedValue<number>;
+	sheetTopY: SharedValue<number>;
+	pushProgressOpenY: SharedValue<number>;
+	screenHeight: number;
+	screenWidth: number;
+	layout: BottomSheetLayoutOptions;
 }
 
 /**
  * Stable app host — does not subscribe to sheet stack state, so navigation
  * does not re-render when sheets open or close.
  */
-function BottomSheetHostShellInner({ engine, children }: BottomSheetHostShellProps) {
+function BottomSheetHostShellInner({
+	children,
+	hostLayoutMode,
+	progress,
+	sheetTopY,
+	pushProgressOpenY,
+	screenHeight,
+	screenWidth,
+	layout,
+}: BottomSheetHostShellProps) {
 	return (
 		<BottomSheetHost
-			hostLayoutMode={engine.activeHostMode}
-			progress={engine.bottomProgress}
-			sheetTopY={engine.hostSheetTopY}
-			pushProgressOpenY={engine.pushProgressOpenY}
-			screenHeight={engine.screenHeight}
-			screenWidth={engine.screenWidth}
-			layout={engine.mergedLayout}
+			hostLayoutMode={hostLayoutMode}
+			progress={progress}
+			sheetTopY={sheetTopY}
+			pushProgressOpenY={pushProgressOpenY}
+			screenHeight={screenHeight}
+			screenWidth={screenWidth}
+			layout={layout}
 			style={styles.hostLayer}
 		>
 			{children}

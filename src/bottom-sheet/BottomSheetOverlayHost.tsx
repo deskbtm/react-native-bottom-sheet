@@ -16,11 +16,11 @@ interface BottomSheetOverlayHostProps {
 export function BottomSheetOverlayHost({ engine }: BottomSheetOverlayHostProps) {
 	const [sheets, setSheets] = useState<BottomSheetState[]>([]);
 
-	useEffect(() => engine.bindSheetState(setSheets), [engine]);
+	useEffect(() => engine.bindSheetState(setSheets), [engine.bindSheetState]);
 
 	const closeFromBackdrop = useCallback(() => {
 		engine.dismissTop();
-	}, [engine]);
+	}, [engine.dismissTop]);
 
 	const topSheet = sheets.length > 0 ? sheets[sheets.length - 1] : null;
 	const activeHostMode = topSheet?.options.mode ?? engine.hostMode;

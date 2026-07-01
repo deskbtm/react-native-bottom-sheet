@@ -17,8 +17,18 @@
   "repository": "https://github.com/nawbc/bottom-sheet",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "build",
+    "src",
+    "android",
+    "ios",
+    "expo-module.config.json"
+  ],
   "scripts": {
     "build": "node internal/module_scripts/build.js",
+    "prepublishOnly": "node internal/module_scripts/build.js",
     "clean": "node internal/module_scripts/clean.js",
     "lint": "eslint src/",
     "test": "node internal/module_scripts/test.js",
