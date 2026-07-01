@@ -43,6 +43,10 @@ describe('getPushHorizontalInset', () => {
 		expect(getPushHorizontalInset(0)).toBe(0);
 		expect(getPushHorizontalInset(1)).toBe(PUSH_HOST_HORIZONTAL_INSET);
 	});
+
+	test('uses custom target inset when provided', () => {
+		expect(getPushHorizontalInset(1, 20)).toBe(20);
+	});
 });
 
 describe('getPushScale', () => {
@@ -101,5 +105,9 @@ describe('getBottomSheetCornerRadius', () => {
 
 	test('returns full corner radius at progress 1', () => {
 		expect(getBottomSheetCornerRadius(1)).toBe(BOTTOM_SHEET_CORNER_RADIUS);
+	});
+
+	test('uses custom max corner radius when provided', () => {
+		expect(getBottomSheetCornerRadius(1, 32)).toBe(32);
 	});
 });

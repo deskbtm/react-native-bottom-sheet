@@ -1,7 +1,10 @@
 import { DETENT_FRACTIONS } from './constants';
-import type { BottomSheetDetent } from './types';
+import type { BottomSheetDetent, BottomSheetLayoutDetentsOptions } from './types';
 
-function resolveDetentFraction(detent: BottomSheetDetent): number {
+function resolveDetentFraction(
+	detent: BottomSheetDetent,
+	fractions: BottomSheetLayoutDetentsOptions = DETENT_FRACTIONS,
+): number {
 	'worklet';
 	if (typeof detent === 'number') {
 		return Math.min(1, Math.max(0, detent));
@@ -9,28 +12,30 @@ function resolveDetentFraction(detent: BottomSheetDetent): number {
 	if (typeof detent === 'string') {
 		return Math.min(1, Math.max(0, Number.parseFloat(detent) / 100));
 	}
-	return DETENT_FRACTIONS[detent];
+	return fractions[detent];
 }
 
 export function getDetentHeight(
 	detent: BottomSheetDetent,
 	screenHeight: number,
 	topInset: number,
+	fractions: BottomSheetLayoutDetentsOptions = DETENT_FRACTIONS,
 ): number {
 	'worklet';
 	if (detent === 'full') {
 		return screenHeight - topInset;
 	}
-	return screenHeight * resolveDetentFraction(detent);
+	return screenHeight * resolveDetentFraction(detent, fractions);
 }
 
 export function getDetentTranslateY(
 	detent: BottomSheetDetent,
 	screenHeight: number,
 	topInset: number,
+	fractions: BottomSheetLayoutDetentsOptions = DETENT_FRACTIONS,
 ): number {
 	'worklet';
-	return screenHeight - getDetentHeight(detent, screenHeight, topInset);
+	return screenHeight - getDetentHeight(detent, screenHeight, topInset, fractions);
 }
 
 export function findNearestDetentIndex(
@@ -38,13 +43,14 @@ export function findNearestDetentIndex(
 	detents: BottomSheetDetent[],
 	screenHeight: number,
 	topInset: number,
+	fractions: BottomSheetLayoutDetentsOptions = DETENT_FRACTIONS,
 ): number {
 	'worklet';
 	let nearestIndex = 0;
 	let minDistance = Number.MAX_VALUE;
 
 	for (let index = 0; index < detents.length; index += 1) {
-		const targetY = getDetentTranslateY(detents[index], screenHeight, topInset);
+		const targetY = getDetentTranslateY(detents[index], screenHeight, topInset, fractions);
 		const distance = Math.abs(translateY - targetY);
 		if (distance < minDistance) {
 			minDistance = distance;

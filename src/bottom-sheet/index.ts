@@ -8,7 +8,12 @@
  * // App.tsx
  * import { BottomSheetProvider } from '@/components/bottom-sheet';
  *
- * <BottomSheetProvider mode="presentation" theme={{ sheetBackgroundColor: '#fff' }}>
+ * <BottomSheetProvider
+ *   mode="presentation"
+ *   sheet={{ snapPoints: ['50%'] }}
+ *   layout={{ presentation: { cornerRadius: 32 } }}
+ *   theme={{ letterboxColor: '#000' }}
+ * >
  *   <Navigation />
  * </BottomSheetProvider>
  *
@@ -28,6 +33,7 @@
  */
 
 export { BottomSheetProvider } from './BottomSheetProvider';
+export { DEFAULT_LAYOUT_OPTIONS, mergeLayoutOptions } from './mergeLayoutOptions';
 export { useBottomSheet } from './BottomSheetContext';
 export {
 	useBottomSheetContent,
@@ -56,6 +62,16 @@ export type {
 	BottomSheetOptions,
 	BottomSheetProviderProps,
 	BottomSheetTheme,
+	BottomSheetLayoutOptions,
+	BottomSheetLayoutMotionOptions,
+	BottomSheetLayoutPresentationOptions,
+	BottomSheetLayoutPushOptions,
+	BottomSheetLayoutStackOptions,
+	BottomSheetLayoutGesturesOptions,
+	BottomSheetLayoutHandleOptions,
+	BottomSheetLayoutScrollOptions,
+	BottomSheetLayoutDetentsOptions,
+	BottomSheetSpringOptions,
 	BottomSheetKeyboardBehavior,
 	BottomSheetKeyboardBlurBehavior,
 } from './types';

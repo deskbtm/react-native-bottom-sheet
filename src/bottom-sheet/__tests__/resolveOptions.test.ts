@@ -22,7 +22,7 @@ describe('resolveBottomSheetOptions', () => {
 		expect(resolved.theme).toEqual(DEFAULT_THEME);
 	});
 
-	test('merges provider defaults before per-sheet options', () => {
+	test('merges provider sheet defaults before per-sheet options', () => {
 		const resolved = resolveBottomSheetOptions(
 			{ snapPoints: ['full'], index: 0, mode: 'push' },
 			{

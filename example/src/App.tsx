@@ -3,7 +3,7 @@ import { DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { Asset } from 'expo-asset';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -28,7 +28,7 @@ export function App() {
 	const theme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
 
 	return (
-		<GestureHandlerRootView style={{ flex: 1 }}>
+		<GestureHandlerRootView style={styles.root}>
 			<SafeAreaProvider>
 				<ImmersiveStatusBar />
 				<KeyboardProvider preload={false}>
@@ -49,3 +49,9 @@ export function App() {
 		</GestureHandlerRootView>
 	);
 }
+
+const styles = StyleSheet.create({
+	root: {
+		flex: 1,
+	},
+});

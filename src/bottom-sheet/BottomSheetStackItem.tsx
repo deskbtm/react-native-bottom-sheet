@@ -3,6 +3,7 @@ import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { BottomSheetOverlay } from './BottomSheetOverlay';
 import type {
 	BottomSheetControllerApi,
+	BottomSheetLayoutOptions,
 	BottomSheetMode,
 	BottomSheetState,
 } from './types';
@@ -23,6 +24,7 @@ interface BottomSheetStackItemProps {
 		id: string,
 		controller: BottomSheetControllerApi | undefined,
 	) => void;
+	layout: BottomSheetLayoutOptions;
 }
 
 export function BottomSheetStackItem({
@@ -36,6 +38,7 @@ export function BottomSheetStackItem({
 	onDismissComplete,
 	onDismissHandlerChange,
 	onControllerReady,
+	layout,
 }: BottomSheetStackItemProps) {
 	const stackedProgress = useSharedValue(0);
 	const isTop = stackIndex === stackSize - 1;
@@ -59,6 +62,7 @@ export function BottomSheetStackItem({
 			onDismissComplete={() => onDismissComplete(sheet.id)}
 			onDismissHandlerChange={(handler) => onDismissHandlerChange(sheet.id, handler)}
 			onControllerReady={(controller) => onControllerReady(sheet.id, controller)}
+			layout={layout}
 		/>
 	);
 }

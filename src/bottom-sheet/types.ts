@@ -146,6 +146,81 @@ export interface BottomSheetState {
 	options: ResolvedBottomSheetOptions;
 }
 
+/** Spring parameters for sheet motion. */
+export interface BottomSheetSpringOptions {
+	damping: number;
+	stiffness: number;
+	mass: number;
+}
+
+/** Provider-wide motion springs. */
+export interface BottomSheetLayoutMotionOptions {
+	sheetSpring: BottomSheetSpringOptions;
+	pushLayoutSpring: BottomSheetSpringOptions;
+}
+
+/** iOS-style presentation host scaling and corner radius. */
+export interface BottomSheetLayoutPresentationOptions {
+	hostScale: number;
+	cornerRadius: number;
+	hostTopInsetMin: number;
+}
+
+/** Push mode horizontal inset between host and sheet. */
+export interface BottomSheetLayoutPushOptions {
+	hostHorizontalInset: number;
+}
+
+/** Stacked sheet card peek styling per depth level. */
+export interface BottomSheetLayoutStackOptions {
+	scalePerLevel: number;
+	horizontalInsetPerLevel: number;
+	offsetYPerLevel: number;
+	radiusBonusPerLevel: number;
+}
+
+/** Drag and snap gesture thresholds. */
+export interface BottomSheetLayoutGesturesOptions {
+	dismissDragThreshold: number;
+	dismissVelocityThreshold: number;
+	detentVelocityThreshold: number;
+	activationOffset: number;
+}
+
+/** Sheet handle dimensions. */
+export interface BottomSheetLayoutHandleOptions {
+	height: number;
+	hiddenHeight: number;
+}
+
+/** Scrollable content insets inside sheets. */
+export interface BottomSheetLayoutScrollOptions {
+	endExtra: number;
+	offsetEpsilon: number;
+}
+
+/** Preset detent height fractions for `medium`, `large`, and `full`. */
+export interface BottomSheetLayoutDetentsOptions {
+	medium: number;
+	large: number;
+	full: number;
+}
+
+/**
+ * Provider-wide physical layout parameters.
+ * Defaults from `constants.ts`; override via `BottomSheetProvider` `layout` prop.
+ */
+export interface BottomSheetLayoutOptions {
+	motion: BottomSheetLayoutMotionOptions;
+	presentation: BottomSheetLayoutPresentationOptions;
+	push: BottomSheetLayoutPushOptions;
+	stack: BottomSheetLayoutStackOptions;
+	gestures: BottomSheetLayoutGesturesOptions;
+	handle: BottomSheetLayoutHandleOptions;
+	scroll: BottomSheetLayoutScrollOptions;
+	detents: BottomSheetLayoutDetentsOptions;
+}
+
 /** Props for `BottomSheetProvider`. */
 export interface BottomSheetProviderProps {
 	children: ReactNode;
@@ -154,7 +229,11 @@ export interface BottomSheetProviderProps {
 	 * @default 'presentation'
 	 */
 	mode?: BottomSheetMode;
-	defaultOptions?: BottomSheetOptions;
+	/** Default options merged into every `present()` / `BottomSheetModal` open. */
+	sheet?: BottomSheetOptions;
+	/** Provider-wide layout parameters. Read once at mount. */
+	layout?: Partial<BottomSheetLayoutOptions>;
+	/** Default colors; updates when the prop changes. */
 	theme?: BottomSheetTheme;
 }
 

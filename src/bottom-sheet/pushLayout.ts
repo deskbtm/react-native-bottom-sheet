@@ -19,25 +19,35 @@ export function getPushLayoutProgress(
 	return interpolate(sheetTopY, [screenHeight, openY], [0, 1], Extrapolation.CLAMP);
 }
 
-export function getPushHorizontalInset(progress: number): number {
+export function getPushHorizontalInset(
+	progress: number,
+	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
+): number {
 	'worklet';
 	return interpolate(
 		progress,
 		[0, 1],
-		[0, PUSH_HOST_HORIZONTAL_INSET],
+		[0, targetInset],
 		Extrapolation.CLAMP,
 	);
 }
 
-export function getPushScale(screenWidth: number, progress: number): number {
+export function getPushScale(
+	screenWidth: number,
+	progress: number,
+	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
+): number {
 	'worklet';
-	return pushInsetToScale(screenWidth, getPushHorizontalInset(progress));
+	return pushInsetToScale(screenWidth, getPushHorizontalInset(progress, targetInset));
 }
 
-/** Side letterbox after uniform scale: `(screenWidth * (1 - scale)) / 2`. */
-export function getPushVisualInset(screenWidth: number, progress: number): number {
+export function getPushVisualInset(
+	screenWidth: number,
+	progress: number,
+	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
+): number {
 	'worklet';
-	const scale = getPushScale(screenWidth, progress);
+	const scale = getPushScale(screenWidth, progress, targetInset);
 	return (screenWidth * (1 - scale)) / 2;
 }
 
@@ -50,9 +60,10 @@ export function getPushHostPushUp(
 	screenHeight: number,
 	sheetTopY: number,
 	progress: number,
+	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
 ): number {
 	'worklet';
-	const visualInset = getPushVisualInset(screenWidth, progress);
+	const visualInset = getPushVisualInset(screenWidth, progress, targetInset);
 	const sheetHeight = Math.max(0, screenHeight - sheetTopY);
 	return sheetHeight + visualInset;
 }
@@ -63,20 +74,19 @@ export function getPushHostPushUpFromSheetTopY(
 	screenHeight: number,
 	sheetTopY: number,
 	openY: number,
+	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
 ): number {
 	'worklet';
 	const progress = getPushLayoutProgress(sheetTopY, openY, screenHeight);
-	return getPushHostPushUp(screenWidth, screenHeight, sheetTopY, progress);
+	return getPushHostPushUp(screenWidth, screenHeight, sheetTopY, progress, targetInset);
 }
 
-export function getBottomSheetCornerRadius(progress: number): number {
+export function getBottomSheetCornerRadius(
+	progress: number,
+	maxRadius: number = BOTTOM_SHEET_CORNER_RADIUS,
+): number {
 	'worklet';
-	return interpolate(
-		progress,
-		[0, 1],
-		[0, BOTTOM_SHEET_CORNER_RADIUS],
-		Extrapolation.CLAMP,
-	);
+	return interpolate(progress, [0, 1], [0, maxRadius], Extrapolation.CLAMP);
 }
 
 /** Scale from bottom center — host stays pinned while shrinking. */

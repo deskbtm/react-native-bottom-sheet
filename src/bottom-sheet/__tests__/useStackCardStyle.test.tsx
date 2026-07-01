@@ -7,6 +7,7 @@ import {
 	STACK_CARD_SCALE_PER_LEVEL,
 	STACK_HORIZONTAL_INSET_PER_LEVEL,
 } from '../constants';
+import { mergeLayoutOptions } from '../mergeLayoutOptions';
 import { useStackCardStyle } from '../useStackCardStyle';
 
 import { createSharedValue } from './testUtils';
@@ -79,6 +80,45 @@ describe('useStackCardStyle', () => {
 			borderTopLeftRadius: BOTTOM_SHEET_CORNER_RADIUS,
 			borderTopRightRadius: BOTTOM_SHEET_CORNER_RADIUS,
 			transform: [{ translateY: 0 }, { scale: 1 }],
+		});
+	});
+
+	test('uses layout.presentation.cornerRadius and layout.stack values when provided', async () => {
+		const styleRef: { current: StackCardStyle | null } = { current: null };
+		const depth = 1;
+		const layout = mergeLayoutOptions({
+			presentation: { cornerRadius: 32 },
+			stack: {
+				scalePerLevel: 0.9,
+				horizontalInsetPerLevel: 12,
+				offsetYPerLevel: -10,
+				radiusBonusPerLevel: 6,
+			},
+		});
+		const scale = 0.9 ** depth;
+		const sheetHeight = SCREEN_HEIGHT - OPEN_Y;
+		const bottomAnchorY = (sheetHeight * (1 - scale)) / 2;
+		const peekY = -10 * depth;
+
+		function CustomLayoutProbe() {
+			const sheetTop = createSharedValue(OPEN_Y);
+			styleRef.current = useStackCardStyle(
+				depth,
+				sheetTop,
+				SCREEN_HEIGHT,
+				true,
+				layout,
+			);
+			return null;
+		}
+
+		await render(<CustomLayoutProbe />);
+
+		expect(styleRef.current).toMatchObject({
+			marginHorizontal: 12 * depth,
+			borderTopLeftRadius: 32 + depth * 6,
+			borderTopRightRadius: 32 + depth * 6,
+			transform: [{ translateY: bottomAnchorY + peekY }, { scale }],
 		});
 	});
 });

@@ -1,6 +1,8 @@
 import { cleanup, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
+import { PRESENTATION_HOST_SCALE } from '../constants';
+import { DEFAULT_LAYOUT_OPTIONS } from '../mergeLayoutOptions';
 import type { BottomSheetEngine } from '../useBottomSheetEngine';
 import { useBottomSheetEngine } from '../useBottomSheetEngine';
 
@@ -41,6 +43,50 @@ describe('useBottomSheetEngine', () => {
 		expect(mockUseWindowDimensions).toHaveBeenCalled();
 		expect(engineRef.current?.screenWidth).toBe(390);
 		expect(engineRef.current?.screenHeight).toBe(844);
+	});
+
+	test('merges layout prop with DEFAULT_LAYOUT_OPTIONS at mount', async () => {
+		const engineRef: { current: BottomSheetEngine | null } = { current: null };
+
+		function LayoutHarness() {
+			const engine = useBottomSheetEngine({
+				mode: 'presentation',
+				layout: { presentation: { cornerRadius: 32 } },
+			});
+			engineRef.current = engine;
+			return null;
+		}
+
+		await render(<LayoutHarness />);
+
+		expect(engineRef.current?.mergedLayout.presentation.cornerRadius).toBe(32);
+		expect(engineRef.current?.mergedLayout.presentation.hostScale).toBe(
+			PRESENTATION_HOST_SCALE,
+		);
+		expect(engineRef.current?.mergedLayout.detents).toEqual(
+			DEFAULT_LAYOUT_OPTIONS.detents,
+		);
+	});
+
+	test('merges sheet prop into present() defaults', async () => {
+		const engineRef: { current: BottomSheetEngine | null } = { current: null };
+
+		function SheetHarness() {
+			const engine = useBottomSheetEngine({
+				mode: 'presentation',
+				sheet: { snapPoints: ['40%'], enablePanDownToClose: false },
+			});
+			engineRef.current = engine;
+			return null;
+		}
+
+		await render(<SheetHarness />);
+		engineRef.current!.present(<Text>Sheet</Text>);
+
+		expect(engineRef.current!.sheetsRef.current[0]?.options.snapPoints).toEqual(['40%']);
+		expect(engineRef.current!.sheetsRef.current[0]?.options.enablePanDownToClose).toBe(
+			false,
+		);
 	});
 
 	test('present adds a sheet and updates the store snapshot', async () => {

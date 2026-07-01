@@ -7,12 +7,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { getBottomSheetScrollBottomPadding, SHEET_SCROLL_END_EXTRA } from './constants';
+import { getBottomSheetScrollBottomPadding } from './constants';
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import { BottomSheetContentContext } from './BottomSheetContentContext';
 import { BottomSheetHandle } from './BottomSheetHandle';
 import { BottomSheetMask } from './BottomSheetMask';
 import { BottomSheetScrollView } from './BottomSheetScrollables';
-import type { BottomSheetControllerApi, BottomSheetState } from './types';
+import type { BottomSheetControllerApi, BottomSheetLayoutOptions, BottomSheetState } from './types';
 import { useBottomSheetController } from './useBottomSheetController';
 import { usePushSheetCardStyle, usePushSheetScaleStyle } from './usePushSheetStyle';
 import { useStackCardStyle } from './useStackCardStyle';
@@ -31,6 +32,7 @@ interface BottomSheetOverlayProps {
 	onDismissComplete: () => void;
 	onDismissHandlerChange: (handler: (() => void) | undefined) => void;
 	onControllerReady: (controller: BottomSheetControllerApi | undefined) => void;
+	layout?: BottomSheetLayoutOptions;
 }
 
 export function BottomSheetOverlay({
@@ -45,6 +47,7 @@ export function BottomSheetOverlay({
 	onDismissComplete,
 	onDismissHandlerChange,
 	onControllerReady,
+	layout = DEFAULT_LAYOUT_OPTIONS,
 }: BottomSheetOverlayProps) {
 	const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 	const idlePushProgressOpenY = useSharedValue(screenHeight);
@@ -55,6 +58,7 @@ export function BottomSheetOverlay({
 
 	const controller = useBottomSheetController({
 		options,
+		layout,
 		progress,
 		hostSheetTopY,
 		pushProgressOpenY,
@@ -71,6 +75,7 @@ export function BottomSheetOverlay({
 		controller.animatedPosition,
 		screenHeight,
 		enableStackCardStyle,
+		layout,
 	);
 	const pushOpenY = pushProgressOpenY ?? idlePushProgressOpenY;
 	const pushSheetScaleStyle = usePushSheetScaleStyle(
@@ -79,12 +84,14 @@ export function BottomSheetOverlay({
 		screenHeight,
 		screenWidth,
 		isPushLayout && pushProgressOpenY != null,
+		layout,
 	);
 	const pushSheetCardStyle = usePushSheetCardStyle(
 		controller.animatedPosition,
 		pushOpenY,
 		screenHeight,
 		isPushLayout && pushProgressOpenY != null,
+		layout,
 	);
 
 	const internalContextValue = {
@@ -106,9 +113,14 @@ export function BottomSheetOverlay({
 		const keyboard = controller.keyboardOffset.value;
 		if (keyboard > 0) {
 			// Sheet container already sits on the keyboard; avoid double vertical inset.
-			return { paddingBottom: SHEET_SCROLL_END_EXTRA };
+			return { paddingBottom: layout.scroll.endExtra };
 		}
-		return { paddingBottom: getBottomSheetScrollBottomPadding(insets.bottom) };
+		return {
+			paddingBottom: getBottomSheetScrollBottomPadding(
+				insets.bottom,
+				layout.scroll.endExtra,
+			),
+		};
 	});
 
 	const fixedContentWrapperStyle = styles.sheetContent;
@@ -116,7 +128,7 @@ export function BottomSheetOverlay({
 	const handleArea = options.showHandle ? (
 		<BottomSheetHandle color={theme.handleColor} />
 	) : (
-		<View style={styles.hiddenHandleArea} />
+		<View style={{ height: layout.handle.hiddenHeight }} />
 	);
 
 	const sheetBody = (
@@ -242,8 +254,5 @@ const styles = StyleSheet.create({
 	dynamicSheetContent: {
 		flexGrow: 1,
 		width: '100%',
-	},
-	hiddenHandleArea: {
-		height: 20,
 	},
 });

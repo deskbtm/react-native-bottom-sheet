@@ -1,6 +1,6 @@
 {
   "name": "@deskbtm-rn/bottom-sheet",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Gorhom-like bottom sheet for React Native (Expo)",
   "keywords": [
     "BottomSheet",

@@ -4,6 +4,7 @@ import {
 	BOTTOM_SHEET_CORNER_RADIUS,
 	PUSH_HOST_HORIZONTAL_INSET,
 } from '../constants';
+import { mergeLayoutOptions } from '../mergeLayoutOptions';
 import {
 	usePushSheetCardStyle,
 	usePushSheetScaleStyle,
@@ -117,6 +118,31 @@ describe('usePushSheetCardStyle', () => {
 			borderTopLeftRadius: BOTTOM_SHEET_CORNER_RADIUS,
 			borderTopRightRadius: BOTTOM_SHEET_CORNER_RADIUS,
 			overflow: 'hidden',
+		});
+	});
+
+	test('uses layout.presentation.cornerRadius when provided', async () => {
+		const styleRef: { current: PushSheetCardStyle | null } = { current: null };
+		const layout = mergeLayoutOptions({ presentation: { cornerRadius: 32 } });
+
+		function CustomLayoutProbe() {
+			const sheetTop = createSharedValue(OPEN_Y);
+			const pushProgressOpenY = createSharedValue(OPEN_Y);
+			styleRef.current = usePushSheetCardStyle(
+				sheetTop,
+				pushProgressOpenY,
+				SCREEN_HEIGHT,
+				true,
+				layout,
+			);
+			return null;
+		}
+
+		await render(<CustomLayoutProbe />);
+
+		expect(styleRef.current).toMatchObject({
+			borderTopLeftRadius: 32,
+			borderTopRightRadius: 32,
 		});
 	});
 });

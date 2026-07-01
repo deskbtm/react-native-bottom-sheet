@@ -69,6 +69,7 @@ export function BottomSheetOverlayHost({ engine }: BottomSheetOverlayHostProps) 
 					onDismissComplete={engine.handleDismissComplete}
 					onDismissHandlerChange={engine.handleDismissHandlerChange}
 					onControllerReady={engine.handleControllerReady}
+					layout={engine.mergedLayout}
 				/>
 			))}
 		</>

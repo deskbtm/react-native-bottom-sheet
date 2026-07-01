@@ -5,10 +5,28 @@ jest.mock("react-native-worklets", () => ({
 }));
 
 jest.mock("react-native-gesture-handler", () => {
+  const createGestureBuilder = () => {
+    const builder: Record<string, jest.Mock> = {};
+    for (const method of [
+      "activeOffsetY",
+      "failOffsetX",
+      "manualActivation",
+      "onStart",
+      "onUpdate",
+      "onEnd",
+      "onTouchesDown",
+      "onTouchesMove",
+    ]) {
+      builder[method] = jest.fn(() => builder);
+    }
+    return builder;
+  };
+
   return {
     GestureDetector: ({ children }: { children: React.ReactNode }) => children,
     Gesture: {
       Native: () => ({}),
+      Pan: () => createGestureBuilder(),
     },
   };
 });
@@ -69,6 +87,7 @@ jest.mock("react-native-reanimated", () => {
       };
     },
     useAnimatedStyle: (factory: () => object) => factory(),
+    useAnimatedReaction: jest.fn(),
     useDerivedValue: (factory: () => unknown) => ({ value: factory() }),
     useAnimatedScrollHandler: (handlers: object) => handlers,
     withSpring: (value: number) => value,

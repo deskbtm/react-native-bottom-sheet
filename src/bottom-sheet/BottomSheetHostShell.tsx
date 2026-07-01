@@ -22,6 +22,7 @@ function BottomSheetHostShellInner({ engine, children }: BottomSheetHostShellPro
 			pushProgressOpenY={engine.pushProgressOpenY}
 			screenHeight={engine.screenHeight}
 			screenWidth={engine.screenWidth}
+			layout={engine.mergedLayout}
 			style={styles.hostLayer}
 		>
 			{children}

@@ -1,15 +1,13 @@
-import type { WithSpringConfig } from 'react-native-reanimated';
+import type { BottomSheetSpringOptions, BottomSheetTheme } from './types';
 
-import type { BottomSheetTheme } from './types';
-
-export const SHEET_SPRING_CONFIG: WithSpringConfig = {
+export const SHEET_SPRING_CONFIG: BottomSheetSpringOptions = {
 	damping: 500,
 	stiffness: 1000,
 	mass: 3,
 };
 
 /** Softer spring for push layout — host + sheet driven by one `sheetTranslateY` motion. */
-export const PUSH_LAYOUT_SPRING_CONFIG: WithSpringConfig = {
+export const PUSH_LAYOUT_SPRING_CONFIG: BottomSheetSpringOptions = {
 	damping: 32,
 	stiffness: 320,
 	mass: 0.85,
@@ -25,10 +23,14 @@ export const PRESENTATION_TRANSFORM_ORIGIN = 'top' as const;
 export const PRESENTATION_HOST_TOP_INSET_MIN = 46;
 
 /** Top letterbox aligned with side inset from scale; push layout ignores this. */
-export function getPresentationHostTopInset(screenWidth: number): number {
+export function getPresentationHostTopInset(
+	screenWidth: number,
+	presentationHostScale: number = PRESENTATION_HOST_SCALE,
+	presentationHostTopInsetMin: number = PRESENTATION_HOST_TOP_INSET_MIN,
+): number {
 	'worklet';
-	const sideLetterbox = (screenWidth * (1 - PRESENTATION_HOST_SCALE)) / 2;
-	return Math.max(sideLetterbox, PRESENTATION_HOST_TOP_INSET_MIN);
+	const sideLetterbox = (screenWidth * (1 - presentationHostScale)) / 2;
+	return Math.max(sideLetterbox, presentationHostTopInsetMin);
 }
 
 /** Horizontal inset target for host/sheet sides in `push` mode (drives scale + gap math). */
@@ -62,9 +64,12 @@ export const HIDDEN_HANDLE_HEIGHT = 20;
 export const SHEET_SCROLL_END_EXTRA = 24;
 
 /** Extra scroll end inset below sheet content (safe area + breathing room). */
-export function getBottomSheetScrollBottomPadding(bottomInset: number): number {
+export function getBottomSheetScrollBottomPadding(
+	bottomInset: number,
+	endExtra: number = SHEET_SCROLL_END_EXTRA,
+): number {
 	'worklet';
-	return bottomInset + SHEET_SCROLL_END_EXTRA;
+	return bottomInset + endExtra;
 }
 
 export const SCROLL_OFFSET_EPSILON = 1;

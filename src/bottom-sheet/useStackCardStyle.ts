@@ -6,14 +6,8 @@ import {
 	type SharedValue,
 } from 'react-native-reanimated';
 
-import {
-	BOTTOM_SHEET_CORNER_RADIUS,
-	SHEET_SPRING_CONFIG,
-	STACK_CARD_OFFSET_Y_PER_LEVEL,
-	STACK_CARD_RADIUS_BONUS_PER_LEVEL,
-	STACK_CARD_SCALE_PER_LEVEL,
-	STACK_HORIZONTAL_INSET_PER_LEVEL,
-} from './constants';
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
+import type { BottomSheetLayoutOptions } from './types';
 
 /**
  * iOS stacked sheets: buried cards are narrower (horizontal inset + scale from bottom).
@@ -24,26 +18,28 @@ export function useStackCardStyle(
 	sheetTopY: SharedValue<number>,
 	screenHeight: number,
 	enabled = true,
+	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
+	const { presentation, stack, motion } = layout;
 	const animatedDepth = useSharedValue(depthFromTop);
 
 	useEffect(() => {
-		animatedDepth.value = withSpring(depthFromTop, SHEET_SPRING_CONFIG);
-	}, [animatedDepth, depthFromTop]);
+		animatedDepth.value = withSpring(depthFromTop, motion.sheetSpring);
+	}, [animatedDepth, depthFromTop, motion.sheetSpring]);
 
 	return useAnimatedStyle(() => {
 		if (!enabled) {
 			return {
 				marginHorizontal: 0,
-				borderTopLeftRadius: BOTTOM_SHEET_CORNER_RADIUS,
-				borderTopRightRadius: BOTTOM_SHEET_CORNER_RADIUS,
+				borderTopLeftRadius: presentation.cornerRadius,
+				borderTopRightRadius: presentation.cornerRadius,
 				transform: [{ translateY: 0 }, { scale: 1 }],
 			};
 		}
 
 		const depth = animatedDepth.value;
 		const borderRadius =
-			BOTTOM_SHEET_CORNER_RADIUS + Math.max(0, depth) * STACK_CARD_RADIUS_BONUS_PER_LEVEL;
+			presentation.cornerRadius + Math.max(0, depth) * stack.radiusBonusPerLevel;
 
 		if (depth <= 0) {
 			return {
@@ -54,12 +50,12 @@ export function useStackCardStyle(
 			};
 		}
 
-		const scale = STACK_CARD_SCALE_PER_LEVEL ** depth;
-		const horizontalInset = STACK_HORIZONTAL_INSET_PER_LEVEL * depth;
+		const scale = stack.scalePerLevel ** depth;
+		const horizontalInset = stack.horizontalInsetPerLevel * depth;
 		const sheetHeight = Math.max(screenHeight - sheetTopY.value, 0);
 		// Pin scale transform to the bottom edge (like UISheetPresentationController).
 		const bottomAnchorY = (sheetHeight * (1 - scale)) / 2;
-		const peekY = STACK_CARD_OFFSET_Y_PER_LEVEL * depth;
+		const peekY = stack.offsetYPerLevel * depth;
 
 		return {
 			marginHorizontal: horizontalInset,

@@ -1,10 +1,12 @@
 import { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import {
 	getBottomSheetCornerRadius,
 	getPushLayoutProgress,
 	getPushScale,
 } from './pushLayout';
+import type { BottomSheetLayoutOptions } from './types';
 
 /** Sheet uses horizontal scale only — bottom stays flush; side inset matches host. */
 export function usePushSheetScaleStyle(
@@ -13,6 +15,7 @@ export function usePushSheetScaleStyle(
 	screenHeight: number,
 	screenWidth: number,
 	enabled: boolean,
+	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
 	return useAnimatedStyle(() => {
 		if (!enabled) {
@@ -24,7 +27,11 @@ export function usePushSheetScaleStyle(
 			pushProgressOpenY.value,
 			screenHeight,
 		);
-		const scale = getPushScale(screenWidth, progress);
+		const scale = getPushScale(
+			screenWidth,
+			progress,
+			layout.push.hostHorizontalInset,
+		);
 
 		return {
 			width: screenWidth,
@@ -41,6 +48,7 @@ export function usePushSheetCardStyle(
 	pushProgressOpenY: SharedValue<number>,
 	screenHeight: number,
 	enabled: boolean,
+	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
 	return useAnimatedStyle(() => {
 		if (!enabled) {
@@ -52,7 +60,7 @@ export function usePushSheetCardStyle(
 			pushProgressOpenY.value,
 			screenHeight,
 		);
-		const radius = getBottomSheetCornerRadius(progress);
+		const radius = getBottomSheetCornerRadius(progress, layout.presentation.cornerRadius);
 
 		return {
 			flex: 1,

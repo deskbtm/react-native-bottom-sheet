@@ -15,7 +15,8 @@ import { useBottomSheetEngine } from './useBottomSheetEngine';
  * Host for global bottom sheet presentation.
  *
  * @param mode - `presentation` (iOS-style scaled app), `modal` (dimmed overlay), or `push` (app slides up). Default `presentation`.
- * @param defaultOptions - Merged into every `present()` / `BottomSheetModal` open
+ * @param sheet - Merged into every `present()` / `BottomSheetModal` open
+ * @param layout - Provider-wide physical parameters (read once at mount)
  * @param theme - Default colors for sheet, letterbox/scrim, and handle
  *
  * @example
@@ -26,12 +27,14 @@ import { useBottomSheetEngine } from './useBottomSheetEngine';
 export function BottomSheetProvider({
 	children,
 	mode: hostMode = 'presentation',
-	defaultOptions,
+	sheet,
+	layout,
 	theme,
 }: BottomSheetProviderProps) {
 	const engine = useBottomSheetEngine({
 		mode: hostMode,
-		defaultOptions,
+		sheet,
+		layout,
 		theme,
 	});
 

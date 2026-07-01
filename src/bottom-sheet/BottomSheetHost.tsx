@@ -6,12 +6,9 @@ import Animated, {
 	type SharedValue,
 } from 'react-native-reanimated';
 
-import {
-	getPresentationHostTopInset,
-	PRESENTATION_HOST_SCALE,
-	PRESENTATION_TRANSFORM_ORIGIN,
-} from './constants';
+import { getPresentationHostTopInset, PRESENTATION_TRANSFORM_ORIGIN } from './constants';
 import { HOST_LAYOUT_MODE, type HostLayoutMode } from './hostLayoutMode';
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import {
 	getBottomSheetCornerRadius,
 	getPushHostPushUpFromSheetTopY,
@@ -19,23 +16,21 @@ import {
 	getPushScale,
 	PUSH_TRANSFORM_ORIGIN,
 } from './pushLayout';
+import type { BottomSheetLayoutOptions } from './types';
 
 interface BottomSheetHostProps {
 	children: ReactNode;
-	/** Numeric layout mode updated on the UI thread — avoids React re-renders on sheet open. */
 	hostLayoutMode: SharedValue<HostLayoutMode>;
 	progress: SharedValue<number>;
 	sheetTopY: SharedValue<number>;
-	/** Push open detent Y — host derives progress inline to avoid reaction timing jitter. */
 	pushProgressOpenY?: SharedValue<number>;
 	screenHeight: number;
 	screenWidth: number;
+	layout?: BottomSheetLayoutOptions;
 	style?: StyleProp<ViewStyle>;
+	testID?: string;
 }
 
-/**
- * Single host wrapper for all layout modes — avoids swapping children between push / presentation.
- */
 export function BottomSheetHost({
 	children,
 	hostLayoutMode,
@@ -44,8 +39,12 @@ export function BottomSheetHost({
 	pushProgressOpenY,
 	screenHeight,
 	screenWidth,
+	layout = DEFAULT_LAYOUT_OPTIONS,
 	style,
+	testID,
 }: BottomSheetHostProps) {
+	const { presentation, push } = layout;
+
 	const animatedStyle = useAnimatedStyle(() => {
 		const mode = hostLayoutMode.value;
 
@@ -53,12 +52,13 @@ export function BottomSheetHost({
 			const topY = sheetTopY.value;
 			const openY = pushProgressOpenY.value;
 			const pushProgress = getPushLayoutProgress(topY, openY, screenHeight);
-			const radius = getBottomSheetCornerRadius(pushProgress);
+			const radius = getBottomSheetCornerRadius(pushProgress, presentation.cornerRadius);
 			const pushUp = getPushHostPushUpFromSheetTopY(
 				screenWidth,
 				screenHeight,
 				topY,
 				openY,
+				push.hostHorizontalInset,
 			);
 
 			return {
@@ -67,7 +67,7 @@ export function BottomSheetHost({
 				transformOrigin: PUSH_TRANSFORM_ORIGIN,
 				transform: [
 					{ translateY: -pushUp },
-					{ scale: getPushScale(screenWidth, pushProgress) },
+					{ scale: getPushScale(screenWidth, pushProgress, push.hostHorizontalInset) },
 				],
 			};
 		}
@@ -77,17 +77,31 @@ export function BottomSheetHost({
 				transformOrigin: PRESENTATION_TRANSFORM_ORIGIN,
 				transform: [
 					{
-						scale: interpolate(progress.value, [0, 1], [1, PRESENTATION_HOST_SCALE]),
+						scale: interpolate(
+							progress.value,
+							[0, 1],
+							[1, presentation.hostScale],
+						),
 					},
 					{
 						translateY: interpolate(
 							progress.value,
 							[0, 1],
-							[0, getPresentationHostTopInset(screenWidth)],
+							[
+								0,
+								getPresentationHostTopInset(
+									screenWidth,
+									presentation.hostScale,
+									presentation.hostTopInsetMin,
+								),
+							],
 						),
 					},
 				],
-				borderRadius: getBottomSheetCornerRadius(progress.value),
+				borderRadius: getBottomSheetCornerRadius(
+					progress.value,
+					presentation.cornerRadius,
+				),
 			};
 		}
 
@@ -95,7 +109,9 @@ export function BottomSheetHost({
 	});
 
 	return (
-		<Animated.View style={[styles.host, style, animatedStyle]}>{children}</Animated.View>
+		<Animated.View testID={testID} style={[styles.host, style, animatedStyle]}>
+			{children}
+		</Animated.View>
 	);
 }
 

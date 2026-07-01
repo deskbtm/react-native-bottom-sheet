@@ -12,17 +12,6 @@ import {
 import { scheduleOnRN } from 'react-native-worklets';
 
 import {
-	DETENT_VELOCITY_THRESHOLD,
-	DISMISS_DRAG_THRESHOLD,
-	DISMISS_VELOCITY_THRESHOLD,
-	HANDLE_HEIGHT,
-	HIDDEN_HANDLE_HEIGHT,
-	PUSH_LAYOUT_SPRING_CONFIG,
-	SCROLL_OFFSET_EPSILON,
-	SHEET_ACTIVATION_OFFSET,
-	SHEET_SPRING_CONFIG,
-} from './constants';
-import {
 	buildDynamicSnapPoint,
 	buildDynamicSheetHeight,
 	clampIndex,
@@ -31,12 +20,18 @@ import {
 	getTranslateYFromSheetHeight,
 	mergeSnapPoints,
 } from './detents';
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import { getPushLayoutProgress } from './pushLayout';
-import type { ResolvedBottomSheetOptions, BottomSheetControllerApi } from './types';
+import type {
+	BottomSheetLayoutOptions,
+	ResolvedBottomSheetOptions,
+	BottomSheetControllerApi,
+} from './types';
 import { useBottomSheetKeyboard } from './useBottomSheetKeyboard';
 
 interface UseSheetControllerParams {
 	options: ResolvedBottomSheetOptions;
+	layout?: BottomSheetLayoutOptions;
 	progress: SharedValue<number>;
 	/** When set, sheet Y is written here directly (same ref drives host push layout). */
 	hostSheetTopY?: SharedValue<number>;
@@ -52,6 +47,7 @@ interface UseSheetControllerParams {
 
 export function useBottomSheetController({
 	options,
+	layout = DEFAULT_LAYOUT_OPTIONS,
 	progress,
 	hostSheetTopY,
 	pushProgressOpenY,
@@ -63,7 +59,8 @@ export function useBottomSheetController({
 	onControllerReady,
 }: UseSheetControllerParams) {
 	const [contentHeight, setContentHeight] = useState<number | null>(null);
-	const handleHeight = options.showHandle ? HANDLE_HEIGHT : HIDDEN_HANDLE_HEIGHT;
+	const { handle, motion, gestures, scroll, detents } = layout;
+	const handleHeight = options.showHandle ? handle.height : handle.hiddenHeight;
 
 	const dynamicSnapPoint = useMemo(() => {
 		if (!options.enableDynamicSizing || contentHeight == null) {
@@ -103,7 +100,7 @@ export function useBottomSheetController({
 	const animatedIndex = useSharedValue(initialIndex);
 	const scrollOffset = useSharedValue(0);
 	const isPushLayout = hostSheetTopY != null && pushProgressOpenY != null;
-	const layoutSpring = isPushLayout ? PUSH_LAYOUT_SPRING_CONFIG : SHEET_SPRING_CONFIG;
+	const layoutSpring = isPushLayout ? motion.pushLayoutSpring : motion.sheetSpring;
 	const { keyboardOffset } = useBottomSheetKeyboard(options.keyboardBehavior, true);
 
 	useAnimatedReaction(
@@ -162,7 +159,7 @@ export function useBottomSheetController({
 			activeDetentIndex.value = nextIndex;
 			animatedIndex.value = nextIndex;
 			options.onAnimate?.(fromIndex, nextIndex);
-			const targetY = getDetentTranslateY(detent, screenHeight, topInset);
+			const targetY = getDetentTranslateY(detent, screenHeight, topInset, detents);
 			if (isPushLayout) {
 				pushProgressOpenY.value = targetY;
 			} else {
@@ -305,20 +302,21 @@ export function useBottomSheetController({
 
 	const handlePanGesture = useMemo(() => {
 		return Gesture.Pan()
-			.activeOffsetY([0, SHEET_ACTIVATION_OFFSET])
+			.activeOffsetY([0, gestures.activationOffset])
 			.failOffsetX([-12, 12])
 			.onStart(() => {
 				dragStartY.value = sheetTranslateY.value;
 			})
 			.onUpdate((event) => {
 				const nextY = dragStartY.value + event.translationY;
-				const minY = getDetentTranslateY('full', screenHeight, topInset);
+				const minY = getDetentTranslateY('full', screenHeight, topInset, detents);
 				sheetTranslateY.value = Math.max(nextY, minY);
 
 				const openY = getDetentTranslateY(
 					effectiveSnapPoints[activeDetentIndex.value],
 					screenHeight,
 					topInset,
+					detents,
 				);
 				if (isPushLayout && pushProgressOpenY) {
 					pushProgressOpenY.value = openY;
@@ -334,12 +332,12 @@ export function useBottomSheetController({
 			.onEnd((event) => {
 				const currentY = sheetTranslateY.value;
 				const dismissY =
-					getDetentTranslateY(effectiveSnapPoints[0], screenHeight, topInset) +
-					DISMISS_DRAG_THRESHOLD;
+					getDetentTranslateY(effectiveSnapPoints[0], screenHeight, topInset, detents) +
+					gestures.dismissDragThreshold;
 
 				if (
 					options.enablePanDownToClose &&
-					(currentY > dismissY || event.velocityY > DISMISS_VELOCITY_THRESHOLD)
+					(currentY > dismissY || event.velocityY > gestures.dismissVelocityThreshold)
 				) {
 					scheduleOnRN(closeSheet);
 					return;
@@ -348,7 +346,7 @@ export function useBottomSheetController({
 				const currentIndex = activeDetentIndex.value;
 
 				if (
-					event.velocityY < -DETENT_VELOCITY_THRESHOLD &&
+					event.velocityY < -gestures.detentVelocityThreshold &&
 					currentIndex < effectiveSnapPoints.length - 1
 				) {
 					const nextIndex = currentIndex + 1;
@@ -356,6 +354,7 @@ export function useBottomSheetController({
 						effectiveSnapPoints[nextIndex],
 						screenHeight,
 						topInset,
+						detents,
 					);
 					activeDetentIndex.value = nextIndex;
 					animatedIndex.value = nextIndex;
@@ -369,12 +368,13 @@ export function useBottomSheetController({
 					return;
 				}
 
-				if (event.velocityY > DETENT_VELOCITY_THRESHOLD && currentIndex > 0) {
+				if (event.velocityY > gestures.detentVelocityThreshold && currentIndex > 0) {
 					const prevIndex = currentIndex - 1;
 					const targetY = getDetentTranslateY(
 						effectiveSnapPoints[prevIndex],
 						screenHeight,
 						topInset,
+						detents,
 					);
 					activeDetentIndex.value = prevIndex;
 					animatedIndex.value = prevIndex;
@@ -393,11 +393,13 @@ export function useBottomSheetController({
 					effectiveSnapPoints,
 					screenHeight,
 					topInset,
+					detents,
 				);
 				const targetY = getDetentTranslateY(
 					effectiveSnapPoints[nearestIndex],
 					screenHeight,
 					topInset,
+					detents,
 				);
 				activeDetentIndex.value = nearestIndex;
 				animatedIndex.value = nearestIndex;
@@ -434,7 +436,7 @@ export function useBottomSheetController({
 				touchStartY.value = event.allTouches[0]?.absoluteY ?? 0;
 			})
 			.onTouchesMove((event, state) => {
-				if (scrollOffset.value > SCROLL_OFFSET_EPSILON) {
+				if (scrollOffset.value > scroll.offsetEpsilon) {
 					state.fail();
 					return;
 				}
@@ -442,12 +444,12 @@ export function useBottomSheetController({
 				const currentY = event.allTouches[0]?.absoluteY ?? touchStartY.value;
 				const deltaY = currentY - touchStartY.value;
 
-				if (deltaY > SHEET_ACTIVATION_OFFSET) {
+				if (deltaY > gestures.activationOffset) {
 					state.activate();
 					return;
 				}
 
-				if (deltaY < -SHEET_ACTIVATION_OFFSET) {
+				if (deltaY < -gestures.activationOffset) {
 					state.fail();
 				}
 			})
@@ -456,13 +458,14 @@ export function useBottomSheetController({
 			})
 			.onUpdate((event) => {
 				const nextY = dragStartY.value + event.translationY;
-				const minY = getDetentTranslateY('full', screenHeight, topInset);
+				const minY = getDetentTranslateY('full', screenHeight, topInset, detents);
 				sheetTranslateY.value = Math.max(nextY, minY);
 
 				const openY = getDetentTranslateY(
 					effectiveSnapPoints[activeDetentIndex.value],
 					screenHeight,
 					topInset,
+					detents,
 				);
 				if (isPushLayout && pushProgressOpenY) {
 					pushProgressOpenY.value = openY;
@@ -478,12 +481,12 @@ export function useBottomSheetController({
 			.onEnd((event) => {
 				const currentY = sheetTranslateY.value;
 				const dismissY =
-					getDetentTranslateY(effectiveSnapPoints[0], screenHeight, topInset) +
-					DISMISS_DRAG_THRESHOLD;
+					getDetentTranslateY(effectiveSnapPoints[0], screenHeight, topInset, detents) +
+					gestures.dismissDragThreshold;
 
 				if (
 					options.enablePanDownToClose &&
-					(currentY > dismissY || event.velocityY > DISMISS_VELOCITY_THRESHOLD)
+					(currentY > dismissY || event.velocityY > gestures.dismissVelocityThreshold)
 				) {
 					scheduleOnRN(closeSheet);
 					return;
@@ -492,7 +495,7 @@ export function useBottomSheetController({
 				const currentIndex = activeDetentIndex.value;
 
 				if (
-					event.velocityY < -DETENT_VELOCITY_THRESHOLD &&
+					event.velocityY < -gestures.detentVelocityThreshold &&
 					currentIndex < effectiveSnapPoints.length - 1
 				) {
 					const nextIndex = currentIndex + 1;
@@ -500,6 +503,7 @@ export function useBottomSheetController({
 						effectiveSnapPoints[nextIndex],
 						screenHeight,
 						topInset,
+						detents,
 					);
 					activeDetentIndex.value = nextIndex;
 					animatedIndex.value = nextIndex;
@@ -513,12 +517,13 @@ export function useBottomSheetController({
 					return;
 				}
 
-				if (event.velocityY > DETENT_VELOCITY_THRESHOLD && currentIndex > 0) {
+				if (event.velocityY > gestures.detentVelocityThreshold && currentIndex > 0) {
 					const prevIndex = currentIndex - 1;
 					const targetY = getDetentTranslateY(
 						effectiveSnapPoints[prevIndex],
 						screenHeight,
 						topInset,
+						detents,
 					);
 					activeDetentIndex.value = prevIndex;
 					animatedIndex.value = prevIndex;
@@ -537,11 +542,13 @@ export function useBottomSheetController({
 					effectiveSnapPoints,
 					screenHeight,
 					topInset,
+					detents,
 				);
 				const targetY = getDetentTranslateY(
 					effectiveSnapPoints[nearestIndex],
 					screenHeight,
 					topInset,
+					detents,
 				);
 				activeDetentIndex.value = nearestIndex;
 				animatedIndex.value = nearestIndex;

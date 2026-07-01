@@ -14,9 +14,11 @@ import { createBottomSheetSheetStore } from './bottomSheetSheetStore';
 import { DEFAULT_THEME } from './constants';
 import { createBottomSheetId } from './createBottomSheetId';
 import { bottomSheetModeToLayoutJs, type HostLayoutMode } from './hostLayoutMode';
+import { mergeLayoutOptions } from './mergeLayoutOptions';
 import { resolveBottomSheetOptions } from './resolveOptions';
 import type {
 	BottomSheetControllerApi,
+	BottomSheetLayoutOptions,
 	BottomSheetMode,
 	BottomSheetOptions,
 	BottomSheetProviderProps,
@@ -27,6 +29,7 @@ import type {
 export interface BottomSheetEngine {
 	hostMode: BottomSheetMode;
 	mergedTheme: Required<NonNullable<BottomSheetProviderProps['theme']>>;
+	mergedLayout: BottomSheetLayoutOptions;
 	bottomProgress: ReturnType<typeof useSharedValue<number>>;
 	hostSheetTopY: ReturnType<typeof useSharedValue<number>>;
 	/** Push detent open Y — paired with {@link hostSheetTopY} for progress on the UI thread. */
@@ -56,11 +59,13 @@ export interface BottomSheetEngine {
 
 export function useBottomSheetEngine({
 	mode: hostMode = 'presentation',
-	defaultOptions,
+	sheet,
+	layout,
 	theme,
 }: Omit<BottomSheetProviderProps, 'children'>): BottomSheetEngine {
 	const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 	const mergedTheme = useMemo(() => ({ ...DEFAULT_THEME, ...theme }), [theme]);
+	const mergedLayout = useMemo(() => mergeLayoutOptions(layout), [layout]);
 
 	const bottomProgress = useSharedValue(0);
 	const hostSheetTopY = useSharedValue(screenHeight);
@@ -204,7 +209,7 @@ export function useBottomSheetEngine({
 			const id = options?.sheetId ?? createBottomSheetId();
 			const resolved = resolveBottomSheetOptions(
 				options,
-				defaultOptions,
+				sheet,
 				theme,
 				hostMode,
 			);
@@ -213,7 +218,7 @@ export function useBottomSheetEngine({
 			commitSheets([...prev.filter((sheet) => sheet.id !== id), entry]);
 			return id;
 		},
-		[commitSheets, defaultOptions, hostMode, theme],
+		[commitSheets, hostMode, sheet, theme],
 	);
 
 	const register = useCallback((modal: RegisteredBottomSheetModal) => {
@@ -228,6 +233,7 @@ export function useBottomSheetEngine({
 		(): BottomSheetEngine => ({
 			hostMode,
 			mergedTheme,
+			mergedLayout,
 			bottomProgress,
 			hostSheetTopY,
 			pushProgressOpenY,
@@ -267,6 +273,7 @@ export function useBottomSheetEngine({
 			hostMode,
 			hostSheetTopY,
 			pushProgressOpenY,
+			mergedLayout,
 			mergedTheme,
 			present,
 			register,

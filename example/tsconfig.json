@@ -2,9 +2,10 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "@/assets/*": ["./assets/*"],
+      "@/assets/*": ["./src/assets/*"],
       "@deskbtm-rn/bottom-sheet": ["../src/index"],
       "@deskbtm-rn/bottom-sheet/*": ["../src/*"],
       "bottom-sheet": ["../src/index"],
