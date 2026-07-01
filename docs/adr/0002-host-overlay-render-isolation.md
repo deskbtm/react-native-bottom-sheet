@@ -15,3 +15,17 @@ Provider-level changes — `theme` prop updates and screen dimension changes —
 - `BottomSheetHostShell` stays `memo`’d and must not subscribe to sheet stack state.
 - Overlay content context values must be referentially stable across parent re-renders when controller fields are unchanged.
 - OverlayHost binds sheet state once via a stable `bindSheetState` callback, not via the whole `engine` object identity.
+- **Protected host content** (no `useBottomSheet()` subscription) must not re-render on sheet lifecycle; this is enforced by `BottomSheetProvider.test.tsx` (presentation, push, modal, stack, dismissAll) and documented in `CONTEXT.md`.
+- **Allowed re-renders:** `useBottomSheet()` subscribers; theme and screen-dimension changes (see negative tests in `BottomSheetProvider.test.tsx`).
+- Example app: Demos tab badge + Debug tab panel (`__DEV__`) for manual verification.
+- **Gesture fluency (Track B):** pan `onUpdate` handlers in `useBottomSheetController` must not call `scheduleOnRN`; host transforms in `BottomSheetHost` use `useAnimatedStyle` with SharedValues only. Enforced by `gestureFluency.test.tsx` (static source invariants). Debug tab includes a manual drag checklist (`__DEV__`).
+- **Sheet scroll (Track C):** `contentPanGesture` fails when `scrollOffset > scroll.offsetEpsilon`; `handlePanGesture` ignores scroll offset. Library scrollables (`BottomSheetScrollables.tsx`) write `scrollOffset` via `useAnimatedScrollHandler`. Raw RN scroll views are out of contract. Enforced by `sheetScrollFluency.test.tsx` and `useBottomSheetKeyboard.test.tsx`. Debug tab includes scroll/keyboard checklist (`__DEV__`). `BottomSheetFlashList` aliases FlatList until native FlashList is adopted.
+- **Multi-sheet stack (Track D):** bottom stack item drives `bottomProgress` / `hostSheetTopY`; buried items use local `stackedProgress`. `BottomSheetOverlayHost` maps all sheets (no unmount-on-bury). Protected host content stays stable at depth 3+ (`BottomSheetProvider.test.tsx`). Enforced by `sheetStackFluency.test.tsx`. No stack depth cap in Phase 1 — document memory cost of mounted overlays.
+
+## Non-goals (Track E)
+
+- App cold-start / time-to-interactive budgets for the host app
+- Bundle-size CI gates for `@deskbtm-rn/bottom-sheet`
+- expo-observe / Instruments frame-rate metrics in this repo
+- Native `@shopify/flash-list` wiring (`BottomSheetFlashList` remains a FlatList alias until adopted)
+- General example-app jank profiling beyond the Debug tab checklists

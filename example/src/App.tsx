@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { BottomSheetProvider } from '@deskbtm-rn/bottom-sheet';
 
+import { HostRenderProbeProvider } from '@/components/HostRenderProbe';
 import { ImmersiveStatusBar } from '@/components/ImmersiveStatusBar';
 import { Navigation } from './navigation';
 
@@ -33,16 +34,18 @@ export function App() {
 				<ImmersiveStatusBar />
 				<KeyboardProvider preload={false}>
 					<BottomSheetProvider mode="presentation">
-						<Navigation
-							theme={theme}
-							linking={{
-								enabled: 'auto',
-								prefixes: [prefix],
-							}}
-							onReady={() => {
-								void SplashScreen.hideAsync();
-							}}
-						/>
+						<HostRenderProbeProvider>
+							<Navigation
+								theme={theme}
+								linking={{
+									enabled: 'auto',
+									prefixes: [prefix],
+								}}
+								onReady={() => {
+									void SplashScreen.hideAsync();
+								}}
+							/>
+						</HostRenderProbeProvider>
 					</BottomSheetProvider>
 				</KeyboardProvider>
 			</SafeAreaProvider>

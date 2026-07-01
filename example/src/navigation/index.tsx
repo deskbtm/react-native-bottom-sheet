@@ -1,23 +1,20 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HeaderButton, Text } from '@react-navigation/elements';
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
 
 import bell from '../assets/bell.png';
 import newspaper from '../assets/newspaper.png';
-import { Home } from './screens/Home';
+import { Debug } from './screens/Debug';
+import { Demos } from './screens/Demos';
 import { NotFound } from './screens/NotFound';
-import { Profile } from './screens/Profile';
-import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
 
-const HomeTabs = createBottomTabNavigator({
+const MainTabs = createBottomTabNavigator({
 	screens: {
-		Home: {
-			screen: Home,
+		Demos: {
+			screen: Demos,
 			options: {
-				title: 'Feed',
+				title: 'Demos',
 				tabBarIcon: ({ color, size }) => (
 					<Image
 						source={newspaper}
@@ -30,9 +27,10 @@ const HomeTabs = createBottomTabNavigator({
 				),
 			},
 		},
-		Updates: {
-			screen: Updates,
+		Debug: {
+			screen: Debug,
 			options: {
+				title: 'Debug',
 				tabBarIcon: ({ color, size }) => (
 					<Image
 						source={bell}
@@ -50,35 +48,11 @@ const HomeTabs = createBottomTabNavigator({
 
 const RootStack = createNativeStackNavigator({
 	screens: {
-		HomeTabs: {
-			screen: HomeTabs,
+		MainTabs: {
+			screen: MainTabs,
 			options: {
-				title: 'Home',
 				headerShown: false,
 			},
-		},
-		Profile: {
-			screen: Profile,
-			linking: {
-				path: ':user(@[a-zA-Z0-9-_]+)',
-				parse: {
-					user: (value) => value.replace(/^@/, ''),
-				},
-				stringify: {
-					user: (value) => `@${value}`,
-				},
-			},
-		},
-		Settings: {
-			screen: Settings,
-			options: ({ navigation }) => ({
-				presentation: 'modal',
-				headerRight: () => (
-					<HeaderButton onPress={navigation.goBack}>
-						<Text>Close</Text>
-					</HeaderButton>
-				),
-			}),
 		},
 		NotFound: {
 			screen: NotFound,

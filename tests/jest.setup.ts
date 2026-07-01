@@ -90,6 +90,15 @@ jest.mock("react-native-reanimated", () => {
     useAnimatedReaction: jest.fn(),
     useDerivedValue: (factory: () => unknown) => ({ value: factory() }),
     useAnimatedScrollHandler: (handlers: object) => handlers,
-    withSpring: (value: number) => value,
+    withSpring: (
+      value: number,
+      _config?: unknown,
+      callback?: (finished?: boolean) => void,
+    ) => {
+      if (typeof callback === 'function') {
+        callback(true);
+      }
+      return value;
+    },
   };
 });
