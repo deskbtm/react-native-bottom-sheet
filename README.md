@@ -8,6 +8,8 @@ React Native bottom sheet built around two first-class host layouts: **presentat
 
 **Platforms:** iOS · Android · Web
 
+https://github.com/user-attachments/assets/0bd5b540-7a72-48fc-a316-31c5a0c2a557
+
 ## Features
 
 - **Presentation mode** — iOS-style host scale + letterbox; stacked card peek when multiple sheets open
