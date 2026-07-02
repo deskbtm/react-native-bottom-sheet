@@ -8,7 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { BottomSheetProvider } from '@deskbtm-rn/bottom-sheet';
+import { BottomSheetProvider } from '@deskbtm/react-native-bottom-sheet';
 
 import { HostRenderProbeProvider } from '@/components/HostRenderProbe';
 import { ImmersiveStatusBar } from '@/components/ImmersiveStatusBar';

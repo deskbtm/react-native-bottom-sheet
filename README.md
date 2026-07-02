@@ -1,4 +1,8 @@
-# @deskbtm-rn/bottom-sheet
+# @deskbtm/react-native-bottom-sheet
+
+[![CI](https://github.com/nawbc/bottom-sheet/actions/workflows/ci.yml/badge.svg)](https://github.com/nawbc/bottom-sheet/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@deskbtm/react-native-bottom-sheet)](https://www.npmjs.com/package/@deskbtm/react-native-bottom-sheet)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 Gorhom-like bottom sheet for React Native (Expo). Supports iOS-style `presentation` mode, `push` layout, and standard `modal` overlay.
 
@@ -11,7 +15,7 @@ Gorhom-like bottom sheet for React Native (Expo). Supports iOS-style `presentati
 ## Install
 
 ```bash
-pnpm add @deskbtm-rn/bottom-sheet
+pnpm add @deskbtm/react-native-bottom-sheet
 ```
 
 Peer dependencies: `expo`, `react-native-gesture-handler`, `react-native-reanimated`, `react-native-keyboard-controller`, `react-native-safe-area-context`, `react-native-worklets`.
@@ -24,7 +28,7 @@ import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { BottomSheetProvider } from "@deskbtm-rn/bottom-sheet";
+import { BottomSheetProvider } from "@deskbtm/react-native-bottom-sheet";
 
 export function App() {
   const theme = useColorScheme() === "dark" ? DarkTheme : DefaultTheme;
@@ -107,5 +111,14 @@ Runtime guarantees for this library are grouped into tracks A–D (see `CONTEXT.
 ## Tests
 
 ```bash
-pnpm test
+pnpm test          # watch mode locally
+pnpm test:ci       # single run (CI)
+pnpm validate      # lint + test:ci + build
+pnpm validate:example  # example typecheck + web export
 ```
+
+CI runs on every push and pull request to `main`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [CHANGELOG.md](./CHANGELOG.md).
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Release process for maintainers: [RELEASING.md](./RELEASING.md).

@@ -5,7 +5,7 @@ import {
 	BottomSheetScrollView,
 	BottomSheetTextInput,
 	useBottomSheetContent,
-} from '@deskbtm-rn/bottom-sheet';
+} from '@deskbtm/react-native-bottom-sheet';
 
 import { sheetDemoStyles as styles } from './sheetDemoStyles';
 

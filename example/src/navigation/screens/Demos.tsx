@@ -3,7 +3,7 @@ import { memo, useRef, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BottomSheetModal, useBottomSheet, type BottomSheetModalRef } from '@deskbtm-rn/bottom-sheet';
+import { BottomSheetModal, useBottomSheet, type BottomSheetModalRef } from '@deskbtm/react-native-bottom-sheet';
 
 import { HostRenderProbeBadge, ProtectedHostRenderMarker } from '@/components/HostRenderProbe';
 import {

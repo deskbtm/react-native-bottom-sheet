@@ -1,5 +1,5 @@
 {
-  "name": "@deskbtm-rn/bottom-sheet",
+  "name": "@deskbtm/react-native-bottom-sheet",
   "version": "0.0.1",
   "description": "Gorhom-like bottom sheet for React Native (Expo)",
   "keywords": [
@@ -15,6 +15,7 @@
   "license": "MIT",
   "author": "nawbc <wanghan9423@outlook.com> (https://github.com/nawbc)",
   "repository": "https://github.com/nawbc/bottom-sheet",
+  "packageManager": "pnpm@9.15.9",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "react-native": "src/index.ts",
@@ -28,10 +29,14 @@
   ],
   "scripts": {
     "build": "node internal/module_scripts/build.js",
+    "build:ci": "node internal/module_scripts/build.js",
     "prepublishOnly": "node internal/module_scripts/build.js",
     "clean": "node internal/module_scripts/clean.js",
     "lint": "eslint src/",
     "test": "node internal/module_scripts/test.js",
+    "test:ci": "jest --watchAll=false --ci",
+    "validate": "pnpm run lint && pnpm run test:ci && pnpm run build:ci",
+    "validate:example": "pnpm --filter bottom-sheet-example run validate",
     "prepare": "node internal/module_scripts/prepare.js",
     "open:ios": "node internal/module_scripts/open-ios.js",
     "open:android": "node internal/module_scripts/open-android.js",

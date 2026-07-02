@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text as RNText, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useBottomSheet } from '@deskbtm-rn/bottom-sheet';
+import { useBottomSheet } from '@deskbtm/react-native-bottom-sheet';
 
 import {
 	HostRenderProbeBadge,

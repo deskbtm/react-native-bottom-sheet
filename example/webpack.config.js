@@ -6,7 +6,7 @@ module.exports = async (env, argv) => {
 		{
 			...env,
 			babel: {
-				dangerouslyAddModulePathsToTranspile: ['@deskbtm-rn/bottom-sheet', 'bottom-sheet'],
+				dangerouslyAddModulePathsToTranspile: ['@deskbtm/react-native-bottom-sheet', 'bottom-sheet'],
 			},
 		},
 		argv,

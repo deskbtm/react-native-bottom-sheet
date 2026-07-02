@@ -20,7 +20,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.extraNodeModules = {
-	'@deskbtm-rn/bottom-sheet': '..',
+	'@deskbtm/react-native-bottom-sheet': '..',
 	'bottom-sheet': '..',
 };
 

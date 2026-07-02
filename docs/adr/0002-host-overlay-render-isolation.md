@@ -25,7 +25,7 @@ Provider-level changes — `theme` prop updates and screen dimension changes —
 ## Non-goals (Track E)
 
 - App cold-start / time-to-interactive budgets for the host app
-- Bundle-size CI gates for `@deskbtm-rn/bottom-sheet`
+- Bundle-size CI gates for `@deskbtm/react-native-bottom-sheet`
 - expo-observe / Instruments frame-rate metrics in this repo
 - Native `@shopify/flash-list` wiring (`BottomSheetFlashList` remains a FlatList alias until adopted)
 - General example-app jank profiling beyond the Debug tab checklists
