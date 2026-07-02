@@ -1,10 +1,12 @@
 {
   "name": "@deskbtm/react-native-bottom-sheet",
   "version": "0.0.1",
-  "description": "Gorhom-like bottom sheet for React Native (Expo)",
+  "description": "React Native bottom sheet with iOS presentation and custom push host modes, modal overlay, snap points, keyboard and scroll handoff",
   "keywords": [
     "BottomSheet",
     "bottom-sheet",
+    "presentation",
+    "push",
     "expo",
     "react-native"
   ],

@@ -1,8 +1,10 @@
 /**
  * @module bottom-sheet
  *
- * Bottom sheet host with gorhom-like API (snap points, keyboard, scrollables).
- * Supports iOS-style `presentation` mode, `push` layout, and standard `modal` overlay mode.
+ * Bottom sheet for React Native with first-class **presentation** and **push** host modes.
+ * Presentation scales and letterboxes the app like iOS sheet modals; push lifts the host
+ * behind the sheet with rounded corners and side insets. Also supports modal overlay,
+ * snap points, keyboard handling, and scrollable content.
  *
  * @example
  * // App.tsx

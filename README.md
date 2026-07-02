@@ -4,13 +4,15 @@
 [![npm version](https://img.shields.io/npm/v/@deskbtm/react-native-bottom-sheet)](https://www.npmjs.com/package/@deskbtm/react-native-bottom-sheet)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-Gorhom-like bottom sheet for React Native (Expo). iOS-style **presentation** mode, **push** layout, and standard **modal** overlay — with snap points, keyboard handling, and scroll-to-pan handoff.
+React Native bottom sheet built around two first-class host layouts: **presentation** scales and letterboxes the app like an iOS sheet modal, and **push** lifts the entire host behind the sheet with rounded corners and side insets. Also supports **modal** overlay, snap points, keyboard handling, and scroll-to-pan handoff.
 
 **Platforms:** iOS · Android · Web
 
 ## Features
 
-- **Three host modes** — `presentation` (scale + letterbox), `modal` (dimmed scrim), `push` (host slides up)
+- **Presentation mode** — iOS-style host scale + letterbox; stacked card peek when multiple sheets open
+- **Push mode** — custom host lift layout: app slides up behind the sheet with matched corner radius and horizontal inset
+- **Modal mode** — classic dimmed scrim overlay; app stays full size
 - **Imperative & declarative APIs** — `useBottomSheet().present()` and `BottomSheetModal`
 - **Snap points** — presets (`medium`, `large`, `full`), percentages (`'50%'`), or fractions
 - **Scroll handoff** — `BottomSheetScrollView`, `BottomSheetFlatList`, `BottomSheetSectionList`
@@ -208,7 +210,7 @@ Override per sheet with `mode` in options, or set a default on the provider:
 | -------------- | --------------------------------------------------------------- |
 | `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek  |
 | `modal`        | Standard overlay with dimmed scrim; host stays full size        |
-| `push`         | Entire host translates up with the sheet; rounded gap at bottom |
+| `push`         | Custom host-lift layout: app moves up behind the sheet with matched corner radius and side inset |
 
 ```tsx
 // Push mode — host slides up with the sheet

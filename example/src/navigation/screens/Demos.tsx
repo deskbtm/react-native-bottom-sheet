@@ -75,7 +75,8 @@ export function Demos() {
 			>
 				<Text style={styles.heading}>Bottom Sheet Demos</Text>
 				<Text style={styles.description}>
-					iOS-style sheet presentation with gorhom-like API on iOS, Android, and Web.
+					Presentation scales the app like iOS sheets; push lifts the host behind the sheet.
+					Runs on iOS, Android, and Web.
 				</Text>
 
 				<DemosHostProbe />
