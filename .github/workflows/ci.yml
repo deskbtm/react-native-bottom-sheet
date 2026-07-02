@@ -45,7 +45,7 @@ jobs:
         run: pnpm build:ci
 
   example:
-    name: Example typecheck and web export
+    name: Example typecheck and Android build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -60,16 +60,27 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Validate example
         run: pnpm validate:example
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx4g
 
-      - name: Upload example web bundle
+      - name: Upload example Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: example-web
-          path: example/dist
+          name: example-android-release
+          path: example/android/app/build/outputs/apk/release/app-release.apk
           retention-days: 14
           if-no-files-found: error

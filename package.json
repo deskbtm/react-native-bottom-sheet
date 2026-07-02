@@ -13,23 +13,37 @@
     "url": "https://github.com/nawbc/bottom-sheet/issues"
   },
   "license": "MIT",
-  "author": "nawbc <wanghan9423@outlook.com> (https://github.com/nawbc)",
-  "repository": "https://github.com/nawbc/bottom-sheet",
+  "author": "han9088 <wanghan9423@outlook.com> (https://github.com/nawbc)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nawbc/bottom-sheet.git"
+  },
   "packageManager": "pnpm@9.15.9",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "react-native": "src/index.ts",
   "source": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "react-native": "./src/index.ts",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "build",
     "src",
-    "android",
+    "!src/**/__tests__/**",
+    "android/build.gradle",
+    "android/src",
     "ios",
     "expo-module.config.json"
   ],
   "scripts": {
     "build": "node internal/module_scripts/build.js",
     "build:ci": "node internal/module_scripts/build.js",
+    "prepack": "node internal/module_scripts/prepare.js --force",
     "prepublishOnly": "node internal/module_scripts/build.js",
     "clean": "node internal/module_scripts/clean.js",
     "lint": "eslint src/",

@@ -10,7 +10,9 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "export:web": "expo export --platform web",
-    "validate": "pnpm run typecheck && pnpm run export:web"
+    "prebuild:android": "expo prebuild --platform android --no-install",
+    "build:android": "expo prebuild --platform android --no-install && node scripts/configure-android-release-signing.js && cd android && ./gradlew assembleRelease --no-daemon",
+    "validate": "pnpm run typecheck && pnpm run build:android"
   },
   "dependencies": {
     "@deskbtm/react-native-bottom-sheet": "workspace:*",

@@ -39,12 +39,34 @@ Gorhom-like bottom sheet for React Native (Expo). iOS-style **presentation** mod
 
 ## Installation
 
+### From npm
+
 ```bash
 npm install @deskbtm/react-native-bottom-sheet
 # or
 pnpm add @deskbtm/react-native-bottom-sheet
 # or
 yarn add @deskbtm/react-native-bottom-sheet
+```
+
+### From GitHub
+
+Install a branch, tag, or commit directly from the repository. The `prepare` script compiles TypeScript during install (npm installs devDependencies for git dependencies by default).
+
+```bash
+npm install github:nawbc/bottom-sheet
+# pin a ref
+npm install github:nawbc/bottom-sheet#main
+npm install github:nawbc/bottom-sheet#v0.0.1
+
+pnpm add github:nawbc/bottom-sheet
+yarn add github:nawbc/bottom-sheet
+```
+
+Use the `git+https://` form if your Git is configured to rewrite HTTPS URLs to SSH:
+
+```bash
+npm install "git+https://github.com/nawbc/bottom-sheet.git#main"
 ```
 
 Install peer dependencies (Expo projects):
