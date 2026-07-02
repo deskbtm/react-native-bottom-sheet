@@ -4,13 +4,28 @@
     "strict": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/assets/*": ["./src/assets/*"],
-      "@deskbtm/react-native-bottom-sheet": ["../src/index"],
-      "@deskbtm/react-native-bottom-sheet/*": ["../src/*"],
-      "bottom-sheet": ["../src/index"],
-      "bottom-sheet/*": ["../src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@/assets/*": [
+        "./src/assets/*"
+      ],
+      "@deskbtm/react-native-bottom-sheet": [
+        "../src/index"
+      ],
+      "@deskbtm/react-native-bottom-sheet/*": [
+        "../src/*"
+      ],
+      "bottom-sheet": [
+        "../src/index"
+      ],
+      "bottom-sheet/*": [
+        "../src/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }
