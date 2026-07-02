@@ -1,6 +1,6 @@
 # @deskbtm/react-native-bottom-sheet
 
-[![CI](https://github.com/nawbc/bottom-sheet/actions/workflows/ci.yml/badge.svg)](https://github.com/nawbc/bottom-sheet/actions/workflows/ci.yml)
+[![CI](https://github.com/deskbtm/react-native-bottom-sheet/actions/workflows/ci.yml/badge.svg)](https://github.com/deskbtm/react-native-bottom-sheet/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/@deskbtm/react-native-bottom-sheet)](https://www.npmjs.com/package/@deskbtm/react-native-bottom-sheet)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
@@ -54,19 +54,19 @@ yarn add @deskbtm/react-native-bottom-sheet
 Install a branch, tag, or commit directly from the repository. The `prepare` script compiles TypeScript during install (npm installs devDependencies for git dependencies by default).
 
 ```bash
-npm install github:nawbc/bottom-sheet
+npm install github:deskbtm/react-native-bottom-sheet
 # pin a ref
-npm install github:nawbc/bottom-sheet#main
-npm install github:nawbc/bottom-sheet#v0.0.1
+npm install github:deskbtm/react-native-bottom-sheet#main
+npm install github:deskbtm/react-native-bottom-sheet#v0.0.1
 
-pnpm add github:nawbc/bottom-sheet
-yarn add github:nawbc/bottom-sheet
+pnpm add github:deskbtm/react-native-bottom-sheet
+yarn add github:deskbtm/react-native-bottom-sheet
 ```
 
 Use the `git+https://` form if your Git is configured to rewrite HTTPS URLs to SSH:
 
 ```bash
-npm install "git+https://github.com/nawbc/bottom-sheet.git#main"
+npm install "git+https://github.com/deskbtm/react-native-bottom-sheet.git#main"
 ```
 
 Install peer dependencies (Expo projects):
@@ -348,7 +348,7 @@ Full types are exported from the package entry point.
 ## Example app
 
 ```bash
-git clone https://github.com/nawbc/bottom-sheet.git
+git clone https://github.com/deskbtm/react-native-bottom-sheet.git
 cd bottom-sheet
 pnpm install
 cd example

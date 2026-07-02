@@ -30,5 +30,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance regression suites for render isolation, gesture fluency, scroll handoff, and stack behavior.
 - Example app with categorized demos and dev-only performance debug panel.
 
-[Unreleased]: https://github.com/nawbc/bottom-sheet/compare/v0.0.1...HEAD
-[0.0.1]: https://github.com/nawbc/bottom-sheet/releases/tag/v0.0.1
+[Unreleased]: https://github.com/deskbtm/react-native-bottom-sheet/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/deskbtm/react-native-bottom-sheet/releases/tag/v0.0.1

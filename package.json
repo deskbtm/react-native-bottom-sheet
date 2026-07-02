@@ -8,15 +8,15 @@
     "expo",
     "react-native"
   ],
-  "homepage": "https://github.com/nawbc/bottom-sheet#readme",
+  "homepage": "https://github.com/deskbtm/react-native-bottom-sheet#readme",
   "bugs": {
-    "url": "https://github.com/nawbc/bottom-sheet/issues"
+    "url": "https://github.com/deskbtm/react-native-bottom-sheet/issues"
   },
   "license": "MIT",
   "author": "han9088 <wanghan9423@outlook.com> (https://github.com/nawbc)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nawbc/bottom-sheet.git"
+    "url": "git+https://github.com/deskbtm/react-native-bottom-sheet.git"
   },
   "packageManager": "pnpm@9.15.9",
   "main": "build/index.js",

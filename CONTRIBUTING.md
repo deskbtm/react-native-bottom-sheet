@@ -10,7 +10,7 @@ Thanks for your interest in contributing to `@deskbtm/react-native-bottom-sheet`
 ## Setup
 
 ```bash
-git clone https://github.com/nawbc/bottom-sheet.git
+git clone https://github.com/deskbtm/react-native-bottom-sheet.git
 cd bottom-sheet
 pnpm install
 ```
@@ -69,7 +69,7 @@ CI must pass before merge. See [`.github/workflows/ci.yml`](./.github/workflows/
 
 ## Reporting issues
 
-Use the [bug report template](https://github.com/nawbc/bottom-sheet/issues/new?template=bug_report.yml) and include:
+Use the [bug report template](https://github.com/deskbtm/react-native-bottom-sheet/issues/new?template=bug_report.yml) and include:
 
 - Expo SDK / React Native versions
 - Platform (iOS, Android, Web)

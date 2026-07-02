@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Describe the problem and proposed solution. Check [CONTEXT.md](https://github.com/nawbc/bottom-sheet/blob/main/CONTEXT.md) and open ADRs for existing design decisions.
+        Describe the problem and proposed solution. Check [CONTEXT.md](https://github.com/deskbtm/react-native-bottom-sheet/blob/main/CONTEXT.md) and open ADRs for existing design decisions.
 
   - type: textarea
     id: problem

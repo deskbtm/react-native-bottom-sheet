@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting. Please search [existing issues](https://github.com/nawbc/bottom-sheet/issues) first.
+        Thanks for reporting. Please search [existing issues](https://github.com/deskbtm/react-native-bottom-sheet/issues) first.
 
   - type: textarea
     id: description
