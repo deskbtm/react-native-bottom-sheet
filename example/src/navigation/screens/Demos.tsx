@@ -3,9 +3,16 @@ import { memo, useRef, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BottomSheetModal, useBottomSheet, type BottomSheetModalRef } from '@deskbtm/react-native-bottom-sheet';
+import {
+	BottomSheetModal,
+	useBottomSheet,
+	type BottomSheetModalRef,
+} from '@deskbtm/react-native-bottom-sheet';
 
-import { HostRenderProbeBadge, ProtectedHostRenderMarker } from '@/components/HostRenderProbe';
+import {
+	HostRenderProbeBadge,
+	ProtectedHostRenderMarker,
+} from '@/components/HostRenderProbe';
 import {
 	DynamicSheetDemo,
 	MaskDemo,
@@ -17,10 +24,6 @@ import {
 } from '@/components/sheet-demos';
 
 const DemosHostProbe = memo(function DemosHostProbe() {
-	if (!__DEV__) {
-		return null;
-	}
-
 	return (
 		<View style={styles.probeWrap}>
 			<ProtectedHostRenderMarker />
@@ -75,8 +78,8 @@ export function Demos() {
 			>
 				<Text style={styles.heading}>Bottom Sheet Demos</Text>
 				<Text style={styles.description}>
-					Presentation scales the app like iOS sheets; push lifts the host behind the sheet.
-					Runs on iOS, Android, and Web.
+					Presentation scales the app like iOS sheets; push lifts the host behind the
+					sheet. Runs on iOS, Android, and Web.
 				</Text>
 
 				<DemosHostProbe />
@@ -141,7 +144,10 @@ export function Demos() {
 					/>
 				</DemoSection>
 
-				<DemoSection title="Backdrop options" description="Scrim press and color customization.">
+				<DemoSection
+					title="Backdrop options"
+					description="Scrim press and color customization."
+				>
 					<DemoButton
 						label="dismissOnScrimPress: false"
 						onPress={() =>

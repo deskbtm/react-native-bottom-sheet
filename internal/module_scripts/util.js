@@ -4,7 +4,7 @@ const { spawnSync } = require('child_process');
 // spawned directly — they require shell: true to resolve. On Unix, shell: true is
 // unnecessary.
 function spawnSyncWithAutoShell(command, args, options) {
-  return spawnSync(command, args, { ...options, shell: process.platform === 'win32' });
+	return spawnSync(command, args, { ...options, shell: process.platform === 'win32' });
 }
 
 module.exports = { spawnSyncWithAutoShell };

@@ -1,14 +1,8 @@
 import { render } from '@testing-library/react-native';
 
-import {
-	BOTTOM_SHEET_CORNER_RADIUS,
-	PUSH_HOST_HORIZONTAL_INSET,
-} from '../constants';
+import { BOTTOM_SHEET_CORNER_RADIUS, PUSH_HOST_HORIZONTAL_INSET } from '../constants';
 import { mergeLayoutOptions } from '../mergeLayoutOptions';
-import {
-	usePushSheetCardStyle,
-	usePushSheetScaleStyle,
-} from '../usePushSheetStyle';
+import { usePushSheetCardStyle, usePushSheetScaleStyle } from '../usePushSheetStyle';
 
 import { createSharedValue } from './testUtils';
 

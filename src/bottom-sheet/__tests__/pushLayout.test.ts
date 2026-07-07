@@ -1,7 +1,4 @@
-import {
-	BOTTOM_SHEET_CORNER_RADIUS,
-	PUSH_HOST_HORIZONTAL_INSET,
-} from '../constants';
+import { BOTTOM_SHEET_CORNER_RADIUS, PUSH_HOST_HORIZONTAL_INSET } from '../constants';
 import {
 	getBottomSheetCornerRadius,
 	getPushHostPushUp,

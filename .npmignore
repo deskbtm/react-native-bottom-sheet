@@ -8,7 +8,6 @@
 **/__mocks__/**
 
 /babel.config.js
-/eslint.config.cjs
 /internal/
 /example/
 /tests/

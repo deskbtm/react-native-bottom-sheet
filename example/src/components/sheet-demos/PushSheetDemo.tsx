@@ -1,7 +1,10 @@
 import { memo } from 'react';
 import { Pressable, Text } from 'react-native';
 
-import { BottomSheetView, useBottomSheetContent } from '@deskbtm/react-native-bottom-sheet';
+import {
+	BottomSheetView,
+	useBottomSheetContent,
+} from '@deskbtm/react-native-bottom-sheet';
 
 import { sheetDemoStyles as styles } from './sheetDemoStyles';
 

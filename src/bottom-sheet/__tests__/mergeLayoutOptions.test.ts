@@ -9,9 +9,7 @@ import { DEFAULT_LAYOUT_OPTIONS, mergeLayoutOptions } from '../mergeLayoutOption
 
 describe('DEFAULT_LAYOUT_OPTIONS', () => {
 	test('builds presentation defaults from constants.ts', () => {
-		expect(DEFAULT_LAYOUT_OPTIONS.presentation.hostScale).toBe(
-			PRESENTATION_HOST_SCALE,
-		);
+		expect(DEFAULT_LAYOUT_OPTIONS.presentation.hostScale).toBe(PRESENTATION_HOST_SCALE);
 		expect(DEFAULT_LAYOUT_OPTIONS.presentation.cornerRadius).toBe(
 			BOTTOM_SHEET_CORNER_RADIUS,
 		);

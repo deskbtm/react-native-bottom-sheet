@@ -102,13 +102,7 @@ describe('useStackCardStyle', () => {
 
 		function CustomLayoutProbe() {
 			const sheetTop = createSharedValue(OPEN_Y);
-			styleRef.current = useStackCardStyle(
-				depth,
-				sheetTop,
-				SCREEN_HEIGHT,
-				true,
-				layout,
-			);
+			styleRef.current = useStackCardStyle(depth, sheetTop, SCREEN_HEIGHT, true, layout);
 			return null;
 		}
 

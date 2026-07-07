@@ -10,7 +10,10 @@ describe('sheet scroll fluency invariants', () => {
 
 	test('content pan fails when scroll offset is above epsilon', () => {
 		const contentPanBlock = extractUseMemoBlock(controllerSource, 'contentPanGesture');
-		const onTouchesMoveBodies = extractGestureHandlerBodies(contentPanBlock, 'onTouchesMove');
+		const onTouchesMoveBodies = extractGestureHandlerBodies(
+			contentPanBlock,
+			'onTouchesMove',
+		);
 
 		expect(onTouchesMoveBodies.length).toBeGreaterThanOrEqual(1);
 

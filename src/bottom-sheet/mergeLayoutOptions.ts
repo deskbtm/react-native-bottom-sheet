@@ -19,10 +19,7 @@ import {
 	STACK_CARD_SCALE_PER_LEVEL,
 	STACK_HORIZONTAL_INSET_PER_LEVEL,
 } from './constants';
-import type {
-	BottomSheetLayoutOptions,
-	BottomSheetSpringOptions,
-} from './types';
+import type { BottomSheetLayoutOptions, BottomSheetSpringOptions } from './types';
 
 export const DEFAULT_LAYOUT_OPTIONS: BottomSheetLayoutOptions = {
 	motion: {

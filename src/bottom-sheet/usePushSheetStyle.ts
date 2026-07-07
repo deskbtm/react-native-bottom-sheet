@@ -27,11 +27,7 @@ export function usePushSheetScaleStyle(
 			pushProgressOpenY.value,
 			screenHeight,
 		);
-		const scale = getPushScale(
-			screenWidth,
-			progress,
-			layout.push.hostHorizontalInset,
-		);
+		const scale = getPushScale(screenWidth, progress, layout.push.hostHorizontalInset);
 
 		return {
 			width: screenWidth,

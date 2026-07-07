@@ -16,7 +16,10 @@ jest.mock('react-native-keyboard-controller', () => ({
 	}),
 }));
 
-const mockUseWindowDimensions = jest.spyOn(require('react-native'), 'useWindowDimensions');
+const mockUseWindowDimensions = jest.spyOn(
+	require('react-native'),
+	'useWindowDimensions',
+);
 
 const SCREEN = { width: 390, height: 844, scale: 2, fontScale: 2 };
 
@@ -41,11 +44,7 @@ function SheetDriver({
 	return null;
 }
 
-function SubscriberProbe({
-	countRef,
-}: {
-	countRef: MutableRefObject<number>;
-}) {
+function SubscriberProbe({ countRef }: { countRef: MutableRefObject<number> }) {
 	countRef.current += 1;
 	useBottomSheet();
 	return null;
@@ -160,18 +159,21 @@ describe('BottomSheetProvider render isolation', () => {
 		['presentation', { mode: 'presentation' as const }],
 		['push', { mode: 'push' as const }],
 		['modal', { mode: 'modal' as const }],
-	])('present in %s mode does not re-render protected host content', async (_label, options) => {
-		const { countRef, driverRef, mountCount } = await renderHostHarness();
+	])(
+		'present in %s mode does not re-render protected host content',
+		async (_label, options) => {
+			const { countRef, driverRef, mountCount } = await renderHostHarness();
 
-		await act(async () => {
-			driverRef.current!.present(<Text>Sheet</Text>, {
-				...options,
-				snapPoints: ['50%'],
+			await act(async () => {
+				driverRef.current!.present(<Text>Sheet</Text>, {
+					...options,
+					snapPoints: ['50%'],
+				});
 			});
-		});
 
-		expect(countRef.current).toBe(mountCount);
-	});
+			expect(countRef.current).toBe(mountCount);
+		},
+	);
 
 	test('provider push mode does not re-render protected host content on present', async () => {
 		const { countRef, driverRef, mountCount } = await renderHostHarness({ mode: 'push' });
@@ -200,7 +202,7 @@ describe('BottomSheetProvider render isolation', () => {
 		});
 
 		await act(async () => {
-			rerender(
+			await rerender(
 				<BottomSheetProvider mode="presentation">
 					<ProtectedHostProbe />
 				</BottomSheetProvider>,
@@ -221,8 +223,11 @@ describe('BottomSheetProvider render isolation', () => {
 		const mountCount = countRef.current;
 
 		await act(async () => {
-			rerender(
-				<BottomSheetProvider mode="presentation" theme={{ hostBackgroundColor: '#000000' }}>
+			await rerender(
+				<BottomSheetProvider
+					mode="presentation"
+					theme={{ hostBackgroundColor: '#000000' }}
+				>
 					<ProtectedHostProbe />
 				</BottomSheetProvider>,
 			);
@@ -232,7 +237,9 @@ describe('BottomSheetProvider render isolation', () => {
 	});
 
 	test('useBottomSheet subscribers re-render when sheet lifecycle changes', async () => {
-		const { driverRef, subscriberCountRef } = await renderHostHarness({ withSubscriber: true });
+		const { driverRef, subscriberCountRef } = await renderHostHarness({
+			withSubscriber: true,
+		});
 
 		const subscriberMountCount = subscriberCountRef.current;
 

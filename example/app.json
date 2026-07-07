@@ -1,48 +1,48 @@
 {
-  "expo": {
-    "name": "bottom-sheet-example",
-    "slug": "bottom-sheet-example",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "bottom-sheet-example",
-    "userInterfaceStyle": "automatic",
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.deskbtm.rn.bottomsheet.example"
-    },
-    "android": {
-      "edgeToEdgeEnabled": true,
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
-      "predictiveBackGestureEnabled": false,
-      "package": "com.deskbtm.rn.bottomsheet.example"
-    },
-    "platforms": ["ios", "android", "web"],
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#208AEF",
-          "android": {
-            "image": "./assets/splash-icon.png",
-            "imageWidth": 76
-          }
-        }
-      ],
-      [
-        "expo-status-bar",
-        {
-          "style": "auto"
-        }
-      ]
-    ]
-  }
+	"expo": {
+		"name": "bottom-sheet-example",
+		"slug": "bottom-sheet-example",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"scheme": "bottom-sheet-example",
+		"userInterfaceStyle": "automatic",
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.deskbtm.rn.bottomsheet.example"
+		},
+		"android": {
+			"edgeToEdgeEnabled": true,
+			"adaptiveIcon": {
+				"backgroundColor": "#E6F4FE",
+				"foregroundImage": "./assets/android-icon-foreground.png",
+				"backgroundImage": "./assets/android-icon-background.png",
+				"monochromeImage": "./assets/android-icon-monochrome.png"
+			},
+			"predictiveBackGestureEnabled": false,
+			"package": "com.deskbtm.rn.bottomsheet.example"
+		},
+		"platforms": ["ios", "android", "web"],
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"plugins": [
+			[
+				"expo-splash-screen",
+				{
+					"backgroundColor": "#208AEF",
+					"android": {
+						"image": "./assets/splash-icon.png",
+						"imageWidth": 76
+					}
+				}
+			],
+			[
+				"expo-status-bar",
+				{
+					"style": "auto"
+				}
+			]
+		]
+	}
 }

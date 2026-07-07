@@ -1,31 +1,16 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "jsx": "react-jsx",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/assets/*": [
-        "./src/assets/*"
-      ],
-      "@deskbtm/react-native-bottom-sheet": [
-        "../src/index"
-      ],
-      "@deskbtm/react-native-bottom-sheet/*": [
-        "../src/*"
-      ],
-      "bottom-sheet": [
-        "../src/index"
-      ],
-      "bottom-sheet/*": [
-        "../src/*"
-      ]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+	"extends": "expo/tsconfig.base",
+	"compilerOptions": {
+		"strict": true,
+		"jsx": "react-jsx",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/assets/*": ["./src/assets/*"],
+			"@deskbtm/react-native-bottom-sheet": ["../src/index"],
+			"@deskbtm/react-native-bottom-sheet/*": ["../src/*"],
+			"bottom-sheet": ["../src/index"],
+			"bottom-sheet/*": ["../src/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx"]
 }

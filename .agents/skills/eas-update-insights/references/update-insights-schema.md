@@ -70,11 +70,7 @@ The `update:view --insights --json` command wraps the same insights payload:
 
 ```json
 {
-	"updates": [
-		/* standard update:view entries */
-	],
-	"insights": {
-		/* same shape as eas update:insights above */
-	}
+	"updates": [/* standard update:view entries */],
+	"insights": {/* same shape as eas update:insights above */}
 }
 ```

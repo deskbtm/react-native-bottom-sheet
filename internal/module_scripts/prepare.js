@@ -8,7 +8,10 @@ const BUILD_ENTRY = path.join(process.cwd(), 'build', 'index.js');
 
 function resolveLocalTsc() {
 	try {
-		return { command: process.execPath, argsPrefix: [require.resolve('typescript/bin/tsc')] };
+		return {
+			command: process.execPath,
+			argsPrefix: [require.resolve('typescript/bin/tsc')],
+		};
 	} catch {
 		// fall through
 	}
@@ -54,7 +57,10 @@ function buildMain(force = false) {
 function buildSubtargets() {
 	for (const target of SUBTARGETS) {
 		const targetDir = path.join(process.cwd(), target);
-		if (fs.existsSync(targetDir) && fs.existsSync(path.join(targetDir, 'tsconfig.json'))) {
+		if (
+			fs.existsSync(targetDir) &&
+			fs.existsSync(path.join(targetDir, 'tsconfig.json'))
+		) {
 			console.log(`Building ${target}`);
 			fs.rmSync(path.join(targetDir, 'build'), { recursive: true, force: true });
 			runTsc(['--build', targetDir]);

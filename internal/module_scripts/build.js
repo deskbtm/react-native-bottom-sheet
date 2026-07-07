@@ -9,23 +9,23 @@ const target = args[0];
 
 let tscArgs;
 if (SUBTARGETS.includes(target)) {
-  const targetDir = path.join(process.cwd(), target);
-  if (!fs.existsSync(path.join(targetDir, 'tsconfig.json'))) {
-    console.log(`tsconfig.json not found in ${target}, skipping build for ${target}`);
-    process.exit(0);
-  }
-  tscArgs = ['--build', targetDir, ...args.slice(1)];
+	const targetDir = path.join(process.cwd(), target);
+	if (!fs.existsSync(path.join(targetDir, 'tsconfig.json'))) {
+		console.log(`tsconfig.json not found in ${target}, skipping build for ${target}`);
+		process.exit(0);
+	}
+	tscArgs = ['--build', targetDir, ...args.slice(1)];
 } else {
-  tscArgs = [...args];
+	tscArgs = [...args];
 }
 
 if (
-  process.stdout.isTTY &&
-  !process.env.CI &&
-  !process.env.EXPO_NONINTERACTIVE &&
-  !tscArgs.includes('--watch')
+	process.stdout.isTTY &&
+	!process.env.CI &&
+	!process.env.EXPO_NONINTERACTIVE &&
+	!tscArgs.includes('--watch')
 ) {
-  tscArgs.push('--watch');
+	tscArgs.push('--watch');
 }
 
 const result = spawnSyncWithAutoShell('tsc', tscArgs, { stdio: 'inherit' });

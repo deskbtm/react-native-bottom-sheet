@@ -36,9 +36,7 @@ describe('<BottomSheetHost />', () => {
 		const animatedStyle = Array.isArray(host.props.style)
 			? host.props.style.find(
 					(entry: object) =>
-						entry != null &&
-						typeof entry === 'object' &&
-						'borderRadius' in entry,
+						entry != null && typeof entry === 'object' && 'borderRadius' in entry,
 				)
 			: host.props.style;
 
@@ -47,11 +45,7 @@ describe('<BottomSheetHost />', () => {
 			transform: [
 				{ scale: 0.85 },
 				{
-					translateY: getPresentationHostTopInset(
-						SCREEN_WIDTH,
-						0.85,
-						40,
-					),
+					translateY: getPresentationHostTopInset(SCREEN_WIDTH, 0.85, 40),
 				},
 			],
 		});

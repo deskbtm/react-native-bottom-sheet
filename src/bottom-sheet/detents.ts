@@ -50,7 +50,12 @@ export function findNearestDetentIndex(
 	let minDistance = Number.MAX_VALUE;
 
 	for (let index = 0; index < detents.length; index += 1) {
-		const targetY = getDetentTranslateY(detents[index], screenHeight, topInset, fractions);
+		const targetY = getDetentTranslateY(
+			detents[index],
+			screenHeight,
+			topInset,
+			fractions,
+		);
 		const distance = Math.abs(translateY - targetY);
 		if (distance < minDistance) {
 			minDistance = distance;

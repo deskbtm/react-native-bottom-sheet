@@ -94,27 +94,30 @@ npx expo install react-native-gesture-handler react-native-reanimated \
 Wrap your app root with the required providers, then add `BottomSheetProvider`:
 
 ```tsx
-import { DarkTheme, DefaultTheme } from "@react-navigation/native";
-import { useColorScheme } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardProvider } from "react-native-keyboard-controller";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { BottomSheetProvider } from "@deskbtm/react-native-bottom-sheet";
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { useColorScheme } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { BottomSheetProvider } from '@deskbtm/react-native-bottom-sheet';
 
 export function App() {
-  const theme = useColorScheme() === "dark" ? DarkTheme : DefaultTheme;
+	const theme = useColorScheme() === 'dark' ? DarkTheme : DefaultTheme;
 
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <KeyboardProvider preload={false}>
-          <BottomSheetProvider mode="presentation" layout={{ presentation: { cornerRadius: 32 } }}>
-            <Navigation theme={theme} />
-          </BottomSheetProvider>
-        </KeyboardProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
-  );
+	return (
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<SafeAreaProvider>
+				<KeyboardProvider preload={false}>
+					<BottomSheetProvider
+						mode="presentation"
+						layout={{ presentation: { cornerRadius: 32 } }}
+					>
+						<Navigation theme={theme} />
+					</BottomSheetProvider>
+				</KeyboardProvider>
+			</SafeAreaProvider>
+		</GestureHandlerRootView>
+	);
 }
 ```
 
@@ -127,39 +130,39 @@ export function App() {
 Call `present()` from any component inside `BottomSheetProvider`:
 
 ```tsx
-import { Pressable, Text, View } from "react-native";
-import { useBottomSheet } from "@deskbtm/react-native-bottom-sheet";
+import { Pressable, Text, View } from 'react-native';
+import { useBottomSheet } from '@deskbtm/react-native-bottom-sheet';
 
 function HomeScreen() {
-  const { present, dismiss, dismissAll, isPresented } = useBottomSheet();
+	const { present, dismiss, dismissAll, isPresented } = useBottomSheet();
 
-  return (
-    <View>
-      <Pressable
-        onPress={() =>
-          present(
-            <View style={{ padding: 24 }}>
-              <Text>Sheet content</Text>
-            </View>,
-            {
-              snapPoints: ["40%", "85%"],
-              index: 0,
-              enablePanDownToClose: true,
-            },
-          )
-        }
-      >
-        <Text>Open sheet</Text>
-      </Pressable>
+	return (
+		<View>
+			<Pressable
+				onPress={() =>
+					present(
+						<View style={{ padding: 24 }}>
+							<Text>Sheet content</Text>
+						</View>,
+						{
+							snapPoints: ['40%', '85%'],
+							index: 0,
+							enablePanDownToClose: true,
+						},
+					)
+				}
+			>
+				<Text>Open sheet</Text>
+			</Pressable>
 
-      <Pressable onPress={() => dismiss()}>
-        <Text>Dismiss top</Text>
-      </Pressable>
-      <Pressable onPress={() => dismissAll()}>
-        <Text>Dismiss all</Text>
-      </Pressable>
-    </View>
-  );
+			<Pressable onPress={() => dismiss()}>
+				<Text>Dismiss top</Text>
+			</Pressable>
+			<Pressable onPress={() => dismissAll()}>
+				<Text>Dismiss all</Text>
+			</Pressable>
+		</View>
+	);
 }
 ```
 
@@ -170,35 +173,35 @@ function HomeScreen() {
 Mount once, open with a ref — useful for sheets tied to a screen lifecycle:
 
 ```tsx
-import { useRef } from "react";
-import { Button } from "react-native";
+import { useRef } from 'react';
+import { Button } from 'react-native';
 import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  type BottomSheetModalRef,
-} from "@deskbtm/react-native-bottom-sheet";
+	BottomSheetModal,
+	BottomSheetScrollView,
+	type BottomSheetModalRef,
+} from '@deskbtm/react-native-bottom-sheet';
 
 function ProfileScreen() {
-  const sheetRef = useRef<BottomSheetModalRef>(null);
+	const sheetRef = useRef<BottomSheetModalRef>(null);
 
-  return (
-    <>
-      <Button title="Edit profile" onPress={() => sheetRef.current?.present()} />
+	return (
+		<>
+			<Button title="Edit profile" onPress={() => sheetRef.current?.present()} />
 
-      <BottomSheetModal
-        ref={sheetRef}
-        sheetId="edit-profile"
-        snapPoints={["40%", "90%"]}
-        index={0}
-        keyboardBehavior="interactive"
-        onDismiss={() => console.log("closed")}
-      >
-        <BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
-          {/* sheet body */}
-        </BottomSheetScrollView>
-      </BottomSheetModal>
-    </>
-  );
+			<BottomSheetModal
+				ref={sheetRef}
+				sheetId="edit-profile"
+				snapPoints={['40%', '90%']}
+				index={0}
+				keyboardBehavior="interactive"
+				onDismiss={() => console.log('closed')}
+			>
+				<BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
+					{/* sheet body */}
+				</BottomSheetScrollView>
+			</BottomSheetModal>
+		</>
+	);
 }
 ```
 
@@ -208,26 +211,26 @@ Ref methods: `present`, `dismiss`, `close`, `forceClose`, `dismissAll`, `snapToI
 
 Override per sheet with `mode` in options, or set a default on the provider:
 
-| Mode           | Behavior                                                        |
-| -------------- | --------------------------------------------------------------- |
-| `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek  |
-| `modal`        | Standard overlay with dimmed scrim; host stays full size        |
+| Mode           | Behavior                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------ |
+| `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek                                   |
+| `modal`        | Standard overlay with dimmed scrim; host stays full size                                         |
 | `push`         | Custom host-lift layout: app moves up behind the sheet with matched corner radius and side inset |
 
 ```tsx
 // Push mode — host slides up with the sheet
 present(<PushSheetContent />, {
-  mode: "push",
-  snapPoints: ["35%", "70%", "full"],
-  index: 0,
+	mode: 'push',
+	snapPoints: ['35%', '70%', 'full'],
+	index: 0,
 });
 
 // Modal mode — flat overlay
 present(<ModalContent />, {
-  mode: "modal",
-  snapPoints: ["45%"],
-  scrimColor: "rgba(0,0,0,0.45)",
-  dismissOnScrimPress: true,
+	mode: 'modal',
+	snapPoints: ['45%'],
+	scrimColor: 'rgba(0,0,0,0.45)',
+	dismissOnScrimPress: true,
 });
 ```
 
@@ -237,27 +240,30 @@ Use library scrollables inside sheets — **raw React Native `ScrollView` / `Fla
 
 ```tsx
 import {
-  BottomSheetScrollView,
-  BottomSheetFlatList,
-  BottomSheetTextInput,
-  useBottomSheetContent,
-} from "@deskbtm/react-native-bottom-sheet";
+	BottomSheetScrollView,
+	BottomSheetFlatList,
+	BottomSheetTextInput,
+	useBottomSheetContent,
+} from '@deskbtm/react-native-bottom-sheet';
 
 function ScrollableSheet() {
-  const { close, expand, collapse } = useBottomSheetContent();
+	const { close, expand, collapse } = useBottomSheetContent();
 
-  return (
-    <BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
-      <BottomSheetTextInput placeholder="Type here" style={{ borderWidth: 1, padding: 12 }} />
-      {/* rows… */}
-    </BottomSheetScrollView>
-  );
+	return (
+		<BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
+			<BottomSheetTextInput
+				placeholder="Type here"
+				style={{ borderWidth: 1, padding: 12 }}
+			/>
+			{/* rows… */}
+		</BottomSheetScrollView>
+	);
 }
 
 // Open with content panning enabled
 present(<ScrollableSheet />, {
-  snapPoints: ["50%", "90%"],
-  enableContentPanningGesture: true,
+	snapPoints: ['50%', '90%'],
+	enableContentPanningGesture: true,
 });
 ```
 
@@ -280,9 +286,9 @@ Pair `BottomSheetTextInput` with interactive keyboard behavior:
 
 ```tsx
 present(<FormSheet />, {
-  snapPoints: ["50%", "90%"],
-  keyboardBehavior: "interactive",
-  keyboardBlurBehavior: "restore",
+	snapPoints: ['50%', '90%'],
+	keyboardBehavior: 'interactive',
+	keyboardBlurBehavior: 'restore',
 });
 ```
 
@@ -297,8 +303,8 @@ present(<FormSheet />, {
 Each `present()` pushes another sheet onto the overlay stack. Host motion follows the **bottom** sheet. In `presentation` mode, buried sheets show iOS-style card inset and scale.
 
 ```tsx
-present(<SheetA />, { snapPoints: ["30%"] });
-present(<SheetB />, { snapPoints: ["45%"] });
+present(<SheetA />, { snapPoints: ['30%'] });
+present(<SheetB />, { snapPoints: ['45%'] });
 // dismiss() removes SheetB; SheetA becomes interactive again
 ```
 

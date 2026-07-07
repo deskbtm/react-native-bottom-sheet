@@ -56,7 +56,9 @@ function configureReleaseSigning() {
 
 	if (!buildGradle.includes('signingConfigs.release')) {
 		if (!buildGradle.includes(debugSigningMarker)) {
-			console.error('Unexpected android/app/build.gradle layout. Update configure-android-release-signing.js.');
+			console.error(
+				'Unexpected android/app/build.gradle layout. Update configure-android-release-signing.js.',
+			);
 			process.exit(1);
 		}
 
@@ -73,7 +75,7 @@ function configureReleaseSigning() {
 
 	buildGradle = buildGradle.replace(
 		releaseBlockPattern,
-		'$1            signingConfig signingConfigs.release'
+		'$1            signingConfig signingConfigs.release',
 	);
 
 	fs.writeFileSync(buildGradlePath, buildGradle);

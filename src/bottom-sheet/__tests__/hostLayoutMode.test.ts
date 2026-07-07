@@ -1,7 +1,4 @@
-import {
-	bottomSheetModeToLayoutJs,
-	HOST_LAYOUT_MODE,
-} from '../hostLayoutMode';
+import { bottomSheetModeToLayoutJs, HOST_LAYOUT_MODE } from '../hostLayoutMode';
 
 describe('bottomSheetModeToLayoutJs', () => {
 	test('maps each bottom sheet mode to a numeric layout mode', () => {

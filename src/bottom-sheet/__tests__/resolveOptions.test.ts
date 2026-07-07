@@ -1,7 +1,4 @@
-import {
-	DEFAULT_ACCESSIBILITY_LABEL,
-	DEFAULT_THEME,
-} from '../constants';
+import { DEFAULT_ACCESSIBILITY_LABEL, DEFAULT_THEME } from '../constants';
 import { resolveBottomSheetOptions } from '../resolveOptions';
 
 describe('resolveBottomSheetOptions', () => {

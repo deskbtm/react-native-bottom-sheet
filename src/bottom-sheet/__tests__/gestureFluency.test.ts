@@ -40,8 +40,12 @@ describe('gesture fluency invariants', () => {
 	test('BottomSheetHost animated style reads SharedValues only (no React hooks / JS bridge)', () => {
 		const animatedStyleBody = extractUseAnimatedStyleBody(hostSource);
 
-		expect(findForbiddenTokens(animatedStyleBody, FORBIDDEN_UI_THREAD_BRIDGE)).toEqual([]);
-		expect(findForbiddenTokens(animatedStyleBody, FORBIDDEN_REACT_IN_WORKLET)).toEqual([]);
+		expect(findForbiddenTokens(animatedStyleBody, FORBIDDEN_UI_THREAD_BRIDGE)).toEqual(
+			[],
+		);
+		expect(findForbiddenTokens(animatedStyleBody, FORBIDDEN_REACT_IN_WORKLET)).toEqual(
+			[],
+		);
 		expect(animatedStyleBody.includes('.value')).toBe(true);
 	});
 });

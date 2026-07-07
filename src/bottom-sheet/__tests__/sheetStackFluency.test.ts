@@ -5,7 +5,9 @@ describe('multi-sheet stack invariants', () => {
 	const overlayHostSource = readModuleSource('BottomSheetOverlayHost.tsx');
 
 	test('bottom sheet drives shared host progress; buried sheets use local progress', () => {
-		expect(stackItemSource).toContain('stackIndex === 0 ? bottomProgress : stackedProgress');
+		expect(stackItemSource).toContain(
+			'stackIndex === 0 ? bottomProgress : stackedProgress',
+		);
 		expect(stackItemSource).toContain('const stackedProgress = useSharedValue(0)');
 	});
 
@@ -17,7 +19,9 @@ describe('multi-sheet stack invariants', () => {
 	});
 
 	test('push host sync is wired only to the bottom stack item', () => {
-		expect(overlayHostSource).toContain('syncHostSheetTopY && index === 0 ? engine.hostSheetTopY');
+		expect(overlayHostSource).toContain(
+			'syncHostSheetTopY && index === 0 ? engine.hostSheetTopY',
+		);
 		expect(overlayHostSource).toContain(
 			'syncHostSheetTopY && index === 0 ? engine.pushProgressOpenY',
 		);

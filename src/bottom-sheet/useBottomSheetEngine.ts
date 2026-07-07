@@ -207,12 +207,7 @@ export function useBottomSheetEngine({
 	const present = useCallback(
 		(content: React.ReactNode, options?: BottomSheetOptions): string => {
 			const id = options?.sheetId ?? createBottomSheetId();
-			const resolved = resolveBottomSheetOptions(
-				options,
-				sheet,
-				theme,
-				hostMode,
-			);
+			const resolved = resolveBottomSheetOptions(options, sheet, theme, hostMode);
 			const entry: BottomSheetState = { id, content, options: resolved };
 			const prev = sheetsRef.current;
 			commitSheets([...prev.filter((sheet) => sheet.id !== id), entry]);

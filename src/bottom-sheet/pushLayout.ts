@@ -24,12 +24,7 @@ export function getPushHorizontalInset(
 	targetInset: number = PUSH_HOST_HORIZONTAL_INSET,
 ): number {
 	'worklet';
-	return interpolate(
-		progress,
-		[0, 1],
-		[0, targetInset],
-		Extrapolation.CLAMP,
-	);
+	return interpolate(progress, [0, 1], [0, targetInset], Extrapolation.CLAMP);
 }
 
 export function getPushScale(

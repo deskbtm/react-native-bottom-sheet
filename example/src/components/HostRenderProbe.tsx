@@ -50,7 +50,9 @@ export function HostRenderProbeProvider({ children }: { children: ReactNode }) {
 	const store = useMemo(() => createHostRenderProbeStore(), []);
 
 	return (
-		<HostRenderProbeContext.Provider value={store}>{children}</HostRenderProbeContext.Provider>
+		<HostRenderProbeContext.Provider value={store}>
+			{children}
+		</HostRenderProbeContext.Provider>
 	);
 }
 
@@ -93,10 +95,6 @@ export const HostRenderProbeBadge = memo(function HostRenderProbeBadge({
 	label = 'Protected host renders',
 }: HostRenderProbeBadgeProps) {
 	const count = useHostRenderCount();
-
-	if (!__DEV__) {
-		return null;
-	}
 
 	return (
 		<View style={styles.badge}>

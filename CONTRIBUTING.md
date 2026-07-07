@@ -21,7 +21,9 @@ pnpm install
 | ----------------------------------------- | ----------------------- |
 | Run unit tests (watch)                    | `pnpm test`             |
 | Run unit tests (CI mode)                  | `pnpm test:ci`          |
-| Lint module + example                     | `pnpm lint`             |
+| Lint (oxlint)                             | `pnpm lint`             |
+| Format (oxfmt)                            | `pnpm fmt`              |
+| Check formatting                          | `pnpm fmt:check`        |
 | Build `build/` output                     | `pnpm build`            |
 | Full local validation                     | `pnpm validate`         |
 | Start example app                         | `pnpm example`          |

@@ -77,11 +77,7 @@ export function BottomSheetHost({
 				transformOrigin: PRESENTATION_TRANSFORM_ORIGIN,
 				transform: [
 					{
-						scale: interpolate(
-							progress.value,
-							[0, 1],
-							[1, presentation.hostScale],
-						),
+						scale: interpolate(progress.value, [0, 1], [1, presentation.hostScale]),
 					},
 					{
 						translateY: interpolate(

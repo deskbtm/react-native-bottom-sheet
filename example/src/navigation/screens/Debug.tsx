@@ -10,7 +10,11 @@ import {
 	ProtectedHostRenderMarker,
 	useHostRenderProbeActions,
 } from '@/components/HostRenderProbe';
-import { SheetListDemo, SheetScrollDemo, StackedSheetDemo } from '@/components/sheet-demos';
+import {
+	SheetListDemo,
+	SheetScrollDemo,
+	StackedSheetDemo,
+} from '@/components/sheet-demos';
 
 const DebugHostProbe = memo(function DebugHostProbe() {
 	return (
@@ -34,17 +38,10 @@ function DebugSheetBody({ title }: { title: string }) {
 }
 
 export function Debug() {
-	const { present, dismiss, dismissAll, isPresented, presentedSheetCount } = useBottomSheet();
+	const { present, dismiss, dismissAll, isPresented, presentedSheetCount } =
+		useBottomSheet();
 	const { reset } = useHostRenderProbeActions();
 	const insets = useSafeAreaInsets();
-
-	if (!__DEV__) {
-		return (
-			<SafeAreaView style={styles.container} edges={['top']}>
-				<Text style={styles.unavailable}>Performance debug is available in development builds only.</Text>
-			</SafeAreaView>
-		);
-	}
 
 	return (
 		<SafeAreaView style={styles.container} edges={['top']}>
@@ -57,8 +54,8 @@ export function Debug() {
 			>
 				<Text style={styles.heading}>Performance debug</Text>
 				<Text style={styles.description}>
-					Manual verification for tracks A–D. Track E (bundle size, cold start, expo-observe)
-					is documented as out of scope in the repo README.
+					Manual verification for tracks A–D. Track E (bundle size, cold start,
+					expo-observe) is documented as out of scope in the repo README.
 				</Text>
 				<View style={styles.checklistCard}>
 					<Text style={styles.checklistItem}>A — Render isolation</Text>
@@ -165,7 +162,9 @@ export function Debug() {
 						})
 					}
 				>
-					<Text style={styles.debugButtonText}>Open multi-detent sheet for drag test</Text>
+					<Text style={styles.debugButtonText}>
+						Open multi-detent sheet for drag test
+					</Text>
 				</Pressable>
 
 				<Text style={styles.heading}>Track C — Sheet scroll</Text>
@@ -232,7 +231,8 @@ export function Debug() {
 						2. Protected host render count stays flat while stacking (see Track A badge).
 					</Text>
 					<Text style={styles.checklistItem}>
-						3. Dismiss top sheet — stack depth decreases, buried sheet becomes interactive.
+						3. Dismiss top sheet — stack depth decreases, buried sheet becomes
+						interactive.
 					</Text>
 					<Text style={styles.probeHint}>
 						No stack depth cap in Phase 1; avoid deep stacks with heavy list content.
@@ -257,12 +257,6 @@ export function Debug() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-	},
-	unavailable: {
-		flex: 1,
-		textAlign: 'center',
-		opacity: 0.6,
-		paddingHorizontal: 32,
 	},
 	scroll: {
 		flex: 1,
