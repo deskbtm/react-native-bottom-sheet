@@ -89,6 +89,13 @@ npx expo install react-native-gesture-handler react-native-reanimated \
 | `react-native-safe-area-context`   | Safe area insets        |
 | `react-native-worklets`            | Reanimated worklets     |
 
+**Worklets Babel plugin (Reanimated 4):** Reanimated 4 depends on [`react-native-worklets`](https://docs.swmansion.com/react-native-worklets/). The actual Babel plugin is **`react-native-worklets/plugin`** ([Reanimated getting started](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)); `react-native-reanimated/plugin` is a re-export of the same plugin.
+
+- **Expo (`babel-preset-expo`):** SDK 50+ auto-injects the worklets plugin when `react-native-worklets` is installed — no manual `babel.config.js` entry required for a default setup.
+- **React Native Community CLI:** add `'react-native-worklets/plugin'` as the **last** Babel plugin.
+
+The **example app** in this repo enables [Worklets Bundle Mode](https://docs.swmansion.com/react-native-worklets/docs/bundleMode/setup/) (`bundleMode: true` in `example/babel.config.js` + `getBundleModeMetroConfig` in `example/metro.config.js`). After changing Babel/Metro config, clear the cache: `pnpm --filter bottom-sheet-example start -- --reset-cache`.
+
 ## Setup
 
 Wrap your app root with the required providers, then add `BottomSheetProvider`:
@@ -376,6 +383,8 @@ The example has two tabs:
 ## Architecture & performance
 
 Sheet state lives in the **overlay subtree** (stack, backdrop, letterbox). **Protected host content** — screens that do not call `useBottomSheet()` — should not re-render on `present`, `dismiss`, or `dismissAll`. Host motion uses Reanimated SharedValues on the UI thread.
+
+**Worklets:** Provider `layout` is merged once at mount ([ADR-0001](./docs/adr/0001-provider-layout-options.md)); animated code captures flat layout scalars (`workletLayout.ts`), not live nested objects. Pan `onUpdate` handlers stay on the UI thread (no `scheduleOnRN` / `runOnJS`); JS bridges run on gesture `onEnd` and spring completion only (Track B).
 
 | Track | Focus                       | Tests                          |
 | ----- | --------------------------- | ------------------------------ |

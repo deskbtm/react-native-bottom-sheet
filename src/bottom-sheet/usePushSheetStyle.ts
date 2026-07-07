@@ -7,6 +7,7 @@ import {
 	getPushScale,
 } from './pushLayout';
 import type { BottomSheetLayoutOptions } from './types';
+import { pickWorkletLayoutScalars } from './workletLayout';
 
 /** Sheet uses horizontal scale only — bottom stays flush; side inset matches host. */
 export function usePushSheetScaleStyle(
@@ -17,6 +18,8 @@ export function usePushSheetScaleStyle(
 	enabled: boolean,
 	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
+	const scalars = pickWorkletLayoutScalars(layout);
+
 	return useAnimatedStyle(() => {
 		if (!enabled) {
 			return {};
@@ -27,7 +30,7 @@ export function usePushSheetScaleStyle(
 			pushProgressOpenY.value,
 			screenHeight,
 		);
-		const scale = getPushScale(screenWidth, progress, layout.push.hostHorizontalInset);
+		const scale = getPushScale(screenWidth, progress, scalars.pushHostHorizontalInset);
 
 		return {
 			width: screenWidth,
@@ -46,6 +49,8 @@ export function usePushSheetCardStyle(
 	enabled: boolean,
 	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
+	const scalars = pickWorkletLayoutScalars(layout);
+
 	return useAnimatedStyle(() => {
 		if (!enabled) {
 			return {};
@@ -56,7 +61,7 @@ export function usePushSheetCardStyle(
 			pushProgressOpenY.value,
 			screenHeight,
 		);
-		const radius = getBottomSheetCornerRadius(progress, layout.presentation.cornerRadius);
+		const radius = getBottomSheetCornerRadius(progress, scalars.presentationCornerRadius);
 
 		return {
 			flex: 1,

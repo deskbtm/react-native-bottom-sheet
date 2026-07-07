@@ -8,12 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { getBottomSheetScrollBottomPadding } from './constants';
-import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import { BottomSheetContentContext } from './BottomSheetContentContext';
 import { BottomSheetHandle } from './BottomSheetHandle';
 import { BottomSheetMask } from './BottomSheetMask';
 import { BottomSheetScrollView } from './BottomSheetScrollables';
+import { getBottomSheetScrollBottomPadding } from './constants';
+import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import type {
 	BottomSheetContentContextValue,
 	BottomSheetControllerApi,
@@ -23,6 +23,7 @@ import type {
 import { useBottomSheetController } from './useBottomSheetController';
 import { usePushSheetCardStyle, usePushSheetScaleStyle } from './usePushSheetStyle';
 import { useStackCardStyle } from './useStackCardStyle';
+import { pickWorkletLayoutScalars } from './workletLayout';
 
 interface BottomSheetOverlayProps {
 	sheet: BottomSheetState;
@@ -61,6 +62,7 @@ export function BottomSheetOverlay({
 	const { options, content: sheetContent } = sheet;
 	const { theme } = options;
 	const isPushLayout = options.mode === 'push';
+	const layoutScalars = useMemo(() => pickWorkletLayoutScalars(layout), [layout]);
 
 	const controller = useBottomSheetController({
 		options,
@@ -75,17 +77,34 @@ export function BottomSheetOverlay({
 		onDismissHandlerChange,
 		onControllerReady,
 	});
+	const {
+		animatedIndex,
+		animatedPosition,
+		closeSheet,
+		collapse,
+		contentPanGesture,
+		enableContentPanningGesture,
+		enableDynamicSizing,
+		expand,
+		handlePanGesture,
+		keyboardOffset,
+		onContentLayout,
+		scrollOffset,
+		sheetDragGesture,
+		sheetStyle,
+		snapToIndex,
+	} = controller;
 
 	const stackCardStyle = useStackCardStyle(
 		enableStackCardStyle ? depthFromTop : 0,
-		controller.animatedPosition,
+		animatedPosition,
 		screenHeight,
 		enableStackCardStyle,
 		layout,
 	);
 	const pushOpenY = pushProgressOpenY ?? idlePushProgressOpenY;
 	const pushSheetScaleStyle = usePushSheetScaleStyle(
-		controller.animatedPosition,
+		animatedPosition,
 		pushOpenY,
 		screenHeight,
 		screenWidth,
@@ -93,7 +112,7 @@ export function BottomSheetOverlay({
 		layout,
 	);
 	const pushSheetCardStyle = usePushSheetCardStyle(
-		controller.animatedPosition,
+		animatedPosition,
 		pushOpenY,
 		screenHeight,
 		isPushLayout && pushProgressOpenY != null,
@@ -102,45 +121,45 @@ export function BottomSheetOverlay({
 
 	const internalContextValue = useMemo(
 		(): BottomSheetContentContextValue => ({
-			animatedIndex: controller.animatedIndex,
-			animatedPosition: controller.animatedPosition,
-			scrollOffset: controller.scrollOffset,
-			snapToIndex: controller.snapToIndex,
-			close: controller.closeSheet,
-			expand: controller.expand,
-			collapse: controller.collapse,
-			enableContentPanningGesture: controller.enableContentPanningGesture,
-			enableDynamicSizing: controller.enableDynamicSizing,
+			animatedIndex,
+			animatedPosition,
+			scrollOffset,
+			snapToIndex,
+			close: closeSheet,
+			expand,
+			collapse,
+			enableContentPanningGesture,
+			enableDynamicSizing,
 			bottomInset: insets.bottom,
-			onContentLayout: controller.onContentLayout,
-			sheetDragGesture: controller.sheetDragGesture,
+			onContentLayout,
+			sheetDragGesture,
 		}),
 		[
-			controller.animatedIndex,
-			controller.animatedPosition,
-			controller.collapse,
-			controller.closeSheet,
-			controller.enableContentPanningGesture,
-			controller.enableDynamicSizing,
-			controller.expand,
-			controller.onContentLayout,
-			controller.scrollOffset,
-			controller.sheetDragGesture,
-			controller.snapToIndex,
+			animatedIndex,
+			animatedPosition,
+			collapse,
+			closeSheet,
+			enableContentPanningGesture,
+			enableDynamicSizing,
+			expand,
+			onContentLayout,
+			scrollOffset,
+			sheetDragGesture,
+			snapToIndex,
 			insets.bottom,
 		],
 	);
 
 	const dynamicContentPaddingStyle = useAnimatedStyle(() => {
-		const keyboard = controller.keyboardOffset.value;
+		const keyboard = keyboardOffset.value;
 		if (keyboard > 0) {
 			// Sheet container already sits on the keyboard; avoid double vertical inset.
-			return { paddingBottom: layout.scroll.endExtra };
+			return { paddingBottom: layoutScalars.scrollEndExtra };
 		}
 		return {
 			paddingBottom: getBottomSheetScrollBottomPadding(
 				insets.bottom,
-				layout.scroll.endExtra,
+				layoutScalars.scrollEndExtra,
 			),
 		};
 	});
@@ -150,20 +169,20 @@ export function BottomSheetOverlay({
 	const handleArea = options.showHandle ? (
 		<BottomSheetHandle color={theme.handleColor} />
 	) : (
-		<View style={{ height: layout.handle.hiddenHeight }} />
+		<View style={{ height: layoutScalars.handleHiddenHeight }} />
 	);
 
 	const sheetBody = (
 		<View style={styles.sheetBody}>
 			{isTop ? (
-				<GestureDetector gesture={controller.handlePanGesture}>
+				<GestureDetector gesture={handlePanGesture}>
 					<Animated.View>{handleArea}</Animated.View>
 				</GestureDetector>
 			) : (
 				<View pointerEvents="none">{handleArea}</View>
 			)}
 
-			{controller.enableDynamicSizing ? (
+			{enableDynamicSizing ? (
 				<BottomSheetScrollView
 					style={styles.dynamicScroll}
 					contentContainerStyle={styles.dynamicSheetContent}
@@ -172,8 +191,8 @@ export function BottomSheetOverlay({
 				>
 					<Animated.View style={dynamicContentPaddingStyle}>{sheetContent}</Animated.View>
 				</BottomSheetScrollView>
-			) : controller.enableContentPanningGesture && isTop ? (
-				<GestureDetector gesture={controller.contentPanGesture}>
+			) : enableContentPanningGesture && isTop ? (
+				<GestureDetector gesture={contentPanGesture}>
 					<Animated.View style={fixedContentWrapperStyle}>{sheetContent}</Animated.View>
 				</GestureDetector>
 			) : (
@@ -193,9 +212,9 @@ export function BottomSheetOverlay({
 		>
 			{isTop ? (
 				<BottomSheetMask
-					sheetTopY={controller.animatedPosition}
+					sheetTopY={animatedPosition}
 					pressable={options.dismissOnScrimPress}
-					onPress={controller.closeSheet}
+					onPress={closeSheet}
 					color={options.scrimColor}
 				/>
 			) : null}
@@ -204,7 +223,7 @@ export function BottomSheetOverlay({
 					styles.sheet,
 					isPushLayout && styles.sheetPushClip,
 					options.sheetStyle,
-					controller.sheetStyle,
+					sheetStyle,
 				]}
 				accessibilityLabel={options.accessibilityLabel}
 				pointerEvents="box-none"

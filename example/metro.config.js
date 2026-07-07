@@ -1,8 +1,9 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require('expo/metro-config');
+const { getBundleModeMetroConfig } = require('react-native-worklets/bundleMode');
 const path = require('path');
 
-const config = getDefaultConfig(__dirname);
+let config = getDefaultConfig(__dirname);
 
 // npm v7+ will install ../node_modules/react and ../node_modules/react-native because of peerDependencies.
 // To prevent the incompatible react-native between ./node_modules/react-native and ../node_modules/react-native,
@@ -32,4 +33,4 @@ config.transformer.getTransformOptions = async () => ({
 	},
 });
 
-module.exports = config;
+module.exports = getBundleModeMetroConfig(config);

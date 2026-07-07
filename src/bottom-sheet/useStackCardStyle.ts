@@ -8,6 +8,7 @@ import {
 
 import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
 import type { BottomSheetLayoutOptions } from './types';
+import { pickWorkletLayoutScalars } from './workletLayout';
 
 /**
  * iOS stacked sheets: buried cards are narrower (horizontal inset + scale from bottom).
@@ -20,26 +21,27 @@ export function useStackCardStyle(
 	enabled = true,
 	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
 ) {
-	const { presentation, stack, motion } = layout;
+	const scalars = pickWorkletLayoutScalars(layout);
 	const animatedDepth = useSharedValue(depthFromTop);
 
 	useEffect(() => {
-		animatedDepth.value = withSpring(depthFromTop, motion.sheetSpring);
-	}, [animatedDepth, depthFromTop, motion.sheetSpring]);
+		animatedDepth.value = withSpring(depthFromTop, layout.motion.sheetSpring);
+	}, [animatedDepth, depthFromTop, layout.motion.sheetSpring]);
 
 	return useAnimatedStyle(() => {
 		if (!enabled) {
 			return {
 				marginHorizontal: 0,
-				borderTopLeftRadius: presentation.cornerRadius,
-				borderTopRightRadius: presentation.cornerRadius,
+				borderTopLeftRadius: scalars.presentationCornerRadius,
+				borderTopRightRadius: scalars.presentationCornerRadius,
 				transform: [{ translateY: 0 }, { scale: 1 }],
 			};
 		}
 
 		const depth = animatedDepth.value;
 		const borderRadius =
-			presentation.cornerRadius + Math.max(0, depth) * stack.radiusBonusPerLevel;
+			scalars.presentationCornerRadius +
+			Math.max(0, depth) * scalars.stackRadiusBonusPerLevel;
 
 		if (depth <= 0) {
 			return {
@@ -50,12 +52,12 @@ export function useStackCardStyle(
 			};
 		}
 
-		const scale = stack.scalePerLevel ** depth;
-		const horizontalInset = stack.horizontalInsetPerLevel * depth;
+		const scale = scalars.stackScalePerLevel ** depth;
+		const horizontalInset = scalars.stackHorizontalInsetPerLevel * depth;
 		const sheetHeight = Math.max(screenHeight - sheetTopY.value, 0);
 		// Pin scale transform to the bottom edge (like UISheetPresentationController).
 		const bottomAnchorY = (sheetHeight * (1 - scale)) / 2;
-		const peekY = stack.offsetYPerLevel * depth;
+		const peekY = scalars.stackOffsetYPerLevel * depth;
 
 		return {
 			marginHorizontal: horizontalInset,

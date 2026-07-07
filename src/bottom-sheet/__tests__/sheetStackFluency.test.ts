@@ -1,8 +1,15 @@
-import { readModuleSource } from './gestureFluencyInvariants';
+import {
+	extractAllUseAnimatedStyleBodies,
+	findForbiddenTokens,
+	readModuleSource,
+} from './gestureFluencyInvariants';
+
+const FORBIDDEN_UI_THREAD_BRIDGE = ['scheduleOnRN', 'runOnJS'] as const;
 
 describe('multi-sheet stack invariants', () => {
 	const stackItemSource = readModuleSource('BottomSheetStackItem.tsx');
 	const overlayHostSource = readModuleSource('BottomSheetOverlayHost.tsx');
+	const stackStyleSource = readModuleSource('useStackCardStyle.ts');
 
 	test('bottom sheet drives shared host progress; buried sheets use local progress', () => {
 		expect(stackItemSource).toContain(
@@ -30,5 +37,17 @@ describe('multi-sheet stack invariants', () => {
 	test('overlay host renders every sheet in the stack', () => {
 		expect(overlayHostSource).toContain('sheets.map(');
 		expect(overlayHostSource.includes('sheets.slice(')).toBe(false);
+	});
+
+	test('stack card animated style reads SharedValues and layout scalars only', () => {
+		const bodies = extractAllUseAnimatedStyleBodies(stackStyleSource);
+
+		expect(bodies.length).toBe(1);
+
+		for (const body of bodies) {
+			expect(findForbiddenTokens(body, FORBIDDEN_UI_THREAD_BRIDGE)).toEqual([]);
+			expect(body).toContain('.value');
+			expect(body).toContain('scalars.');
+		}
 	});
 });

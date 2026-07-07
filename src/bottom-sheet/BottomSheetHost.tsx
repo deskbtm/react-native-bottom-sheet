@@ -17,6 +17,7 @@ import {
 	PUSH_TRANSFORM_ORIGIN,
 } from './pushLayout';
 import type { BottomSheetLayoutOptions } from './types';
+import { pickWorkletLayoutScalars } from './workletLayout';
 
 interface BottomSheetHostProps {
 	children: ReactNode;
@@ -43,7 +44,7 @@ export function BottomSheetHost({
 	style,
 	testID,
 }: BottomSheetHostProps) {
-	const { presentation, push } = layout;
+	const scalars = pickWorkletLayoutScalars(layout);
 
 	const animatedStyle = useAnimatedStyle(() => {
 		const mode = hostLayoutMode.value;
@@ -52,13 +53,16 @@ export function BottomSheetHost({
 			const topY = sheetTopY.value;
 			const openY = pushProgressOpenY.value;
 			const pushProgress = getPushLayoutProgress(topY, openY, screenHeight);
-			const radius = getBottomSheetCornerRadius(pushProgress, presentation.cornerRadius);
+			const radius = getBottomSheetCornerRadius(
+				pushProgress,
+				scalars.presentationCornerRadius,
+			);
 			const pushUp = getPushHostPushUpFromSheetTopY(
 				screenWidth,
 				screenHeight,
 				topY,
 				openY,
-				push.hostHorizontalInset,
+				scalars.pushHostHorizontalInset,
 			);
 
 			return {
@@ -67,7 +71,13 @@ export function BottomSheetHost({
 				transformOrigin: PUSH_TRANSFORM_ORIGIN,
 				transform: [
 					{ translateY: -pushUp },
-					{ scale: getPushScale(screenWidth, pushProgress, push.hostHorizontalInset) },
+					{
+						scale: getPushScale(
+							screenWidth,
+							pushProgress,
+							scalars.pushHostHorizontalInset,
+						),
+					},
 				],
 			};
 		}
@@ -77,7 +87,11 @@ export function BottomSheetHost({
 				transformOrigin: PRESENTATION_TRANSFORM_ORIGIN,
 				transform: [
 					{
-						scale: interpolate(progress.value, [0, 1], [1, presentation.hostScale]),
+						scale: interpolate(
+							progress.value,
+							[0, 1],
+							[1, scalars.presentationHostScale],
+						),
 					},
 					{
 						translateY: interpolate(
@@ -87,8 +101,8 @@ export function BottomSheetHost({
 								0,
 								getPresentationHostTopInset(
 									screenWidth,
-									presentation.hostScale,
-									presentation.hostTopInsetMin,
+									scalars.presentationHostScale,
+									scalars.presentationHostTopInsetMin,
 								),
 							],
 						),
@@ -96,7 +110,7 @@ export function BottomSheetHost({
 				],
 				borderRadius: getBottomSheetCornerRadius(
 					progress.value,
-					presentation.cornerRadius,
+					scalars.presentationCornerRadius,
 				),
 			};
 		}

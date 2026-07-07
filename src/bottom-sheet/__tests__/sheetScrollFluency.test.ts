@@ -1,8 +1,12 @@
 import {
+	extractAnimatedScrollHandlerBody,
 	extractGestureHandlerBodies,
 	extractUseMemoBlock,
+	findForbiddenTokens,
 	readModuleSource,
 } from './gestureFluencyInvariants';
+
+const FORBIDDEN_UI_THREAD_BRIDGE = ['scheduleOnRN', 'runOnJS'] as const;
 
 describe('sheet scroll fluency invariants', () => {
 	const controllerSource = readModuleSource('useBottomSheetController.ts');
@@ -19,7 +23,7 @@ describe('sheet scroll fluency invariants', () => {
 
 		for (const body of onTouchesMoveBodies) {
 			expect(body).toContain('scrollOffset.value');
-			expect(body).toContain('scroll.offsetEpsilon');
+			expect(body).toContain('scrollOffsetEpsilon');
 			expect(body).toContain('state.fail()');
 		}
 	});
@@ -35,5 +39,12 @@ describe('sheet scroll fluency invariants', () => {
 		expect(scrollablesSource).toContain('useAnimatedScrollHandler');
 		expect(scrollablesSource).toContain('scrollOffset.value');
 		expect(scrollablesSource).toContain('Gesture.Native()');
+	});
+
+	test('scroll handler onScroll stays on the UI thread', () => {
+		const onScrollBody = extractAnimatedScrollHandlerBody(scrollablesSource);
+
+		expect(findForbiddenTokens(onScrollBody, FORBIDDEN_UI_THREAD_BRIDGE)).toEqual([]);
+		expect(onScrollBody).toContain('scrollOffset.value');
 	});
 });

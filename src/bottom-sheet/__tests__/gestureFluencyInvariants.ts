@@ -38,14 +38,90 @@ export function extractGestureHandlerBodies(
 }
 
 export function extractUseAnimatedStyleBody(source: string): string {
-	const marker = 'useAnimatedStyle(() => {';
-	const start = source.indexOf(marker);
+	const bodies = extractAllUseAnimatedStyleBodies(source);
 
-	if (start === -1) {
+	if (bodies.length === 0) {
 		throw new Error('useAnimatedStyle callback not found');
 	}
 
-	const openBraceIndex = start + marker.length - 1;
+	return bodies[0];
+}
+
+export function extractAllUseAnimatedStyleBodies(source: string): string[] {
+	const bodies: string[] = [];
+	const blockMarker = 'useAnimatedStyle(() => {';
+	let searchFrom = 0;
+
+	while (searchFrom < source.length) {
+		const start = source.indexOf(blockMarker, searchFrom);
+
+		if (start === -1) {
+			break;
+		}
+
+		const openBraceIndex = start + blockMarker.length - 1;
+		bodies.push(extractBalancedBlock(source, openBraceIndex));
+		searchFrom = openBraceIndex + 1;
+	}
+
+	const expressionMarker = 'useAnimatedStyle(() =>';
+	searchFrom = 0;
+
+	while (searchFrom < source.length) {
+		const start = source.indexOf(expressionMarker, searchFrom);
+
+		if (start === -1) {
+			break;
+		}
+
+		const afterArrow = start + expressionMarker.length;
+		const nextChar = source.slice(afterArrow).trimStart()[0];
+
+		if (nextChar === '{') {
+			searchFrom = afterArrow + 1;
+			continue;
+		}
+
+		const openIndex = source.indexOf('(', afterArrow);
+
+		if (openIndex === -1) {
+			break;
+		}
+
+		bodies.push(extractBalancedBlock(source, openIndex));
+		searchFrom = openIndex + 1;
+	}
+
+	return bodies;
+}
+
+export function extractAnimatedScrollHandlerBody(source: string): string {
+	const marker = 'useAnimatedScrollHandler({';
+	const start = source.indexOf(marker);
+
+	if (start === -1) {
+		throw new Error('useAnimatedScrollHandler block not found');
+	}
+
+	const onScrollMarker = 'onScroll:';
+	const onScrollStart = source.indexOf(onScrollMarker, start);
+
+	if (onScrollStart === -1) {
+		throw new Error('useAnimatedScrollHandler onScroll not found');
+	}
+
+	const arrowStart = source.indexOf('=>', onScrollStart);
+
+	if (arrowStart === -1) {
+		throw new Error('useAnimatedScrollHandler onScroll arrow not found');
+	}
+
+	const openBraceIndex = source.indexOf('{', arrowStart);
+
+	if (openBraceIndex === -1) {
+		throw new Error('useAnimatedScrollHandler onScroll body not found');
+	}
+
 	return extractBalancedBlock(source, openBraceIndex);
 }
 
