@@ -1,6 +1,6 @@
 {
 	"name": "@deskbtm/react-native-bottom-sheet",
-	"version": "0.0.1",
+	"version": "0.0.2-alpha.0",
 	"description": "React Native bottom sheet with iOS presentation and custom push host modes, modal overlay, snap points, keyboard and scroll handoff",
 	"keywords": [
 		"BottomSheet",
@@ -61,6 +61,7 @@
 		"changeset": "changeset",
 		"version-packages": "changeset version",
 		"release": "pnpm validate && changeset publish",
+		"release:alpha": "pnpm validate && changeset publish --tag alpha",
 		"prepare": "node internal/module_scripts/prepare.js",
 		"open:ios": "node internal/module_scripts/open-ios.js",
 		"open:android": "node internal/module_scripts/open-android.js",

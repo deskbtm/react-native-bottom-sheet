@@ -1,0 +1,9 @@
+{
+	"mode": "pre",
+	"tag": "alpha",
+	"initialVersions": {
+		"@deskbtm/react-native-bottom-sheet": "0.0.1",
+		"bottom-sheet-example": "1.0.0"
+	},
+	"changesets": ["alpha-0-0-2"]
+}

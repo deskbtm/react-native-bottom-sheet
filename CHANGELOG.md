@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.2-alpha.0
+
+### Patch Changes
+
+- Alpha release: Expo SDK 57 alignment, Changesets release automation, and CI improvements.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
