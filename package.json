@@ -41,6 +41,10 @@
 		},
 		"./package.json": "./package.json"
 	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
 	"scripts": {
 		"build": "node internal/module_scripts/build.js",
 		"build:ci": "node internal/module_scripts/build.js",
@@ -54,6 +58,9 @@
 		"test:ci": "jest --watchAll=false --ci",
 		"validate": "pnpm run fmt:check && pnpm run lint && pnpm run test:ci && pnpm run build:ci",
 		"validate:example": "pnpm --filter bottom-sheet-example run validate",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"release": "pnpm validate && changeset publish",
 		"prepare": "node internal/module_scripts/prepare.js",
 		"open:ios": "node internal/module_scripts/open-ios.js",
 		"open:android": "node internal/module_scripts/open-android.js",
@@ -61,6 +68,8 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
+		"@changesets/changelog-github": "^0.5.2",
+		"@changesets/cli": "^2.31.0",
 		"@react-native/jest-preset": "0.86.0",
 		"@react-native/metro-config": "0.86.0",
 		"@testing-library/react-native": "^14.0.0",

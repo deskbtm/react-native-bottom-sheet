@@ -413,7 +413,7 @@ Contributions welcome. Please read:
 
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — setup, commits, PR checklist
 - [CHANGELOG.md](./CHANGELOG.md) — release history
-- [RELEASING.md](./RELEASING.md) — maintainer release process
+- [docs/releasing.md](./docs/releasing.md) — maintainer release process
 - [SECURITY.md](./SECURITY.md) — vulnerability reporting
 
 ## License

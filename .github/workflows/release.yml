@@ -1,23 +1,31 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 env:
   CI: true
+  EXPO_NO_TELEMETRY: 1
   EXPO_NONINTERACTIVE: 1
 
 jobs:
-  publish:
-    name: Publish to npm
+  release:
+    name: Version or publish
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
       id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -32,19 +40,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate
-        run: pnpm validate
-
-      - name: Verify release tag matches package version
-        run: |
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          TAG="${GITHUB_REF_NAME#v}"
-          if [ "$PKG_VERSION" != "$TAG" ]; then
-            echo "package.json version ($PKG_VERSION) does not match release tag ($TAG)"
-            exit 1
-          fi
-
-      - name: Publish
-        run: npm publish --access public --provenance
+      - name: Create release PR or publish
+        uses: changesets/action@v1
+        with:
+          version: pnpm version-packages
+          publish: pnpm release
+          title: "chore(release): version packages"
+          commit: "chore(release): version packages"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

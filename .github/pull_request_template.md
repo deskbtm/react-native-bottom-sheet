@@ -17,7 +17,7 @@ Closes #
 - [ ] `pnpm validate` passes locally
 - [ ] `pnpm validate:example` passes locally (if example changed)
 - [ ] Unit tests added or updated for logic changes
-- [ ] `CHANGELOG.md` updated under **Unreleased** (user-facing changes)
+- [ ] Changeset added for user-facing library changes (`pnpm changeset`)
 - [ ] ADR / `CONTEXT.md` updated (architecture or performance contract changes)
 
 ## Test plan

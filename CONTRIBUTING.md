@@ -53,7 +53,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 feat(bottom-sheet): add keyboard-aware push layout
 fix(android): use icon.png for adaptive icon foreground
 test: add stack fluency regression
-docs: update CHANGELOG for v0.1.0
+docs: update releasing guide for changesets
 ```
 
 Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `ci`, `build`.
@@ -64,7 +64,7 @@ Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `ci`, `build`
 2. Make focused changes — one logical change per PR when possible.
 3. Add or update unit tests for non-trivial logic changes.
 4. Run `pnpm validate` and `pnpm validate:example` before opening the PR.
-5. Update `CHANGELOG.md` under **Unreleased** for user-facing changes.
+5. Add a changeset for user-facing library changes: `pnpm changeset` (see [docs/releasing.md](./docs/releasing.md)).
 6. Fill out the PR template.
 
 CI must pass before merge. See [`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
@@ -80,4 +80,4 @@ Use the [bug report template](https://github.com/deskbtm/react-native-bottom-she
 
 ## Releases
 
-Maintainers: see [RELEASING.md](./RELEASING.md).
+Maintainers: see [docs/releasing.md](./docs/releasing.md).
