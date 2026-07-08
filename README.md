@@ -8,7 +8,7 @@ React Native bottom sheet built around two first-class host layouts: **presentat
 
 **Platforms:** iOS · Android · Web
 
-https://github.com/user-attachments/assets/0bd5b540-7a72-48fc-a316-31c5a0c2a557
+https://github.com/user-attachments/assets/88fd0a40-5407-4715-8aed-8ec8fe6c9d23
 
 ## Features
 
