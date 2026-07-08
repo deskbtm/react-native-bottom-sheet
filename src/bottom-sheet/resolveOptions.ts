@@ -1,12 +1,12 @@
 import { DEFAULT_ACCESSIBILITY_LABEL, DEFAULT_THEME } from './constants';
 import { clampIndex, findDetentIndex } from './detents';
 import type {
-    BottomSheetDetent,
-    BottomSheetMode,
-    BottomSheetOptions,
-    BottomSheetTheme,
-    PushDirection,
-    ResolvedBottomSheetOptions,
+	BottomSheetDetent,
+	BottomSheetMode,
+	BottomSheetOptions,
+	BottomSheetTheme,
+	PushDirection,
+	ResolvedBottomSheetOptions,
 } from './types';
 
 function mergeTheme(

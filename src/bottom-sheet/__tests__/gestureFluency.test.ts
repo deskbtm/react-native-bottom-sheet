@@ -1,9 +1,9 @@
 import {
-    extractAllUseAnimatedStyleBodies,
-    extractGestureHandlerBodies,
-    extractUseAnimatedStyleBody,
-    findForbiddenTokens,
-    readModuleSource,
+	extractAllUseAnimatedStyleBodies,
+	extractGestureHandlerBodies,
+	extractUseAnimatedStyleBody,
+	findForbiddenTokens,
+	readModuleSource,
 } from './gestureFluencyInvariants';
 
 const FORBIDDEN_UI_THREAD_BRIDGE = ['scheduleOnRN', 'runOnJS'] as const;

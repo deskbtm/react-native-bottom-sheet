@@ -218,10 +218,10 @@ Ref methods: `present`, `dismiss`, `close`, `forceClose`, `dismissAll`, `snapToI
 
 Override per sheet with `mode` in options, or set a default on the provider:
 
-| Mode           | Behavior                                                                                         |
-| -------------- | ------------------------------------------------------------------------------------------------ |
-| `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek                                   |
-| `modal`        | Standard overlay with dimmed scrim; host stays full size                                         |
+| Mode           | Behavior                                                                                                   |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek                                             |
+| `modal`        | Standard overlay with dimmed scrim; host stays full size                                                   |
 | `push`         | Host-lift layout: sheet pushes the app away with matched corner radius and side inset (default: bottom-up) |
 
 ```tsx

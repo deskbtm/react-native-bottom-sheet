@@ -2,18 +2,18 @@ import { BOTTOM_SHEET_CORNER_RADIUS, PUSH_HOST_HORIZONTAL_INSET } from '../const
 import { getDetentTranslateY, getPushClosedTopY, getPushDetentTopY } from '../detents';
 import { PUSH_DIRECTION_JS } from '../pushDirection';
 import {
-    getBottomSheetCornerRadius,
-    getPushHorizontalInset,
-    getPushHostCornerRadiusStyle,
-    getPushHostOffset,
-    getPushHostOffsetFromSheetTopY,
-    getPushHostPushUp,
-    getPushHostPushUpFromSheetTopY,
-    getPushLayoutProgress,
-    getPushScale,
-    getPushSheetCornerRadiusStyle,
-    getPushTransformOrigin,
-    getPushVisualInset,
+	getBottomSheetCornerRadius,
+	getPushHorizontalInset,
+	getPushHostCornerRadiusStyle,
+	getPushHostOffset,
+	getPushHostOffsetFromSheetTopY,
+	getPushHostPushUp,
+	getPushHostPushUpFromSheetTopY,
+	getPushLayoutProgress,
+	getPushScale,
+	getPushSheetCornerRadiusStyle,
+	getPushTransformOrigin,
+	getPushVisualInset,
 } from '../pushLayout';
 
 const SCREEN_WIDTH = 390;
@@ -75,9 +75,7 @@ describe('getPushLayoutProgress', () => {
 	test('returns 1 when top push sheet is fully open', () => {
 		const closedY = getPushClosedTopY(PUSH_DIRECTION_JS.top, SCREEN_HEIGHT, 0);
 
-		expect(
-			getPushLayoutProgress(0, 0, SCREEN_HEIGHT, PUSH_DIRECTION_JS.top, 0),
-		).toBe(1);
+		expect(getPushLayoutProgress(0, 0, SCREEN_HEIGHT, PUSH_DIRECTION_JS.top, 0)).toBe(1);
 		expect(closedY).toBe(-SCREEN_HEIGHT);
 	});
 

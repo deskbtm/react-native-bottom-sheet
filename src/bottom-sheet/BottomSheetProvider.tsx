@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import {
-    BottomSheetActionsContext,
-    BottomSheetSheetStoreContext,
+	BottomSheetActionsContext,
+	BottomSheetSheetStoreContext,
 } from './BottomSheetContext';
 import { BottomSheetHostShell } from './BottomSheetHostShell';
 import { BottomSheetModalRegistryProvider } from './BottomSheetModalRegistry';

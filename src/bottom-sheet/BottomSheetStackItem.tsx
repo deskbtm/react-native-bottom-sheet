@@ -2,10 +2,10 @@ import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 import { BottomSheetOverlay } from './BottomSheetOverlay';
 import type {
-    BottomSheetControllerApi,
-    BottomSheetLayoutOptions,
-    BottomSheetMode,
-    BottomSheetState,
+	BottomSheetControllerApi,
+	BottomSheetLayoutOptions,
+	BottomSheetMode,
+	BottomSheetState,
 } from './types';
 
 interface BottomSheetStackItemProps {

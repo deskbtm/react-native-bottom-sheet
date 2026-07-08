@@ -4,23 +4,23 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
-    BottomSheetModal,
-    useBottomSheet,
-    type BottomSheetModalRef,
+	BottomSheetModal,
+	useBottomSheet,
+	type BottomSheetModalRef,
 } from '@deskbtm/react-native-bottom-sheet';
 
 import {
-    HostRenderProbeBadge,
-    ProtectedHostRenderMarker,
+	HostRenderProbeBadge,
+	ProtectedHostRenderMarker,
 } from '@/components/HostRenderProbe';
 import {
-    DynamicSheetDemo,
-    MaskDemo,
-    PushSheetDemo,
-    SheetListDemo,
-    SheetScrollDemo,
-    StackedSheetDemo,
-    sheetDemoStyles,
+	DynamicSheetDemo,
+	MaskDemo,
+	PushSheetDemo,
+	SheetListDemo,
+	SheetScrollDemo,
+	StackedSheetDemo,
+	sheetDemoStyles,
 } from '@/components/sheet-demos';
 
 const DemosHostProbe = memo(function DemosHostProbe() {
