@@ -55,23 +55,40 @@ yarn add @deskbtm/react-native-bottom-sheet
 
 ### From GitHub
 
-Install a branch, tag, or commit directly from the repository. The `prepare` script compiles TypeScript during install (npm installs devDependencies for git dependencies by default).
+Install a branch, tag, or commit directly from the repository. Git installs run the `prepare` script, which compiles TypeScript into `build/` (that folder is not committed).
 
 ```bash
 npm install github:deskbtm/react-native-bottom-sheet
 # pin a ref
 npm install github:deskbtm/react-native-bottom-sheet#main
-npm install github:deskbtm/react-native-bottom-sheet#v0.0.1
+npm install github:deskbtm/react-native-bottom-sheet#v0.0.2-alpha.0
 
 pnpm add github:deskbtm/react-native-bottom-sheet
+pnpm add github:deskbtm/react-native-bottom-sheet#main
+
 yarn add github:deskbtm/react-native-bottom-sheet
 ```
 
-Use the `git+https://` form if your Git is configured to rewrite HTTPS URLs to SSH:
+Use the `git+https://` form if your Git client rewrites HTTPS URLs to SSH:
 
 ```bash
 npm install "git+https://github.com/deskbtm/react-native-bottom-sheet.git#main"
+pnpm add "git+https://github.com/deskbtm/react-native-bottom-sheet.git#main"
 ```
+
+Or add to `package.json`:
+
+```json
+{
+	"dependencies": {
+		"@deskbtm/react-native-bottom-sheet": "github:deskbtm/react-native-bottom-sheet#main"
+	}
+}
+```
+
+**pnpm:** this package sets `"installConfig": { "production": false }` so its devDependencies (TypeScript) install during `prepare`. If install still fails, run `pnpm add … --config.production=false`.
+
+**After install:** rebuild native projects (`npx expo prebuild` or `npx pod-install` on iOS) so the Expo module is linked.
 
 Install peer dependencies (Expo projects):
 
