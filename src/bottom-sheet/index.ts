@@ -2,9 +2,9 @@
  * @module bottom-sheet
  *
  * Bottom sheet for React Native with first-class **presentation** and **push** host modes.
- * Presentation scales and letterboxes the app like iOS sheet modals; push lifts the host
- * behind the sheet with rounded corners and side insets. Also supports modal overlay,
- * snap points, keyboard handling, and scrollable content.
+ * Presentation scales and letterboxes the app like iOS sheet modals; push moves the host
+ * behind the sheet (bottom-up by default, or top-down via `pushDirection: 'top'`).
+ * Also supports modal overlay, snap points, keyboard handling, and scrollable content.
  *
  * @example
  * // App.tsx
@@ -34,46 +34,25 @@
  * });
  */
 
-export { BottomSheetProvider } from './BottomSheetProvider';
-export { DEFAULT_LAYOUT_OPTIONS, mergeLayoutOptions } from './mergeLayoutOptions';
-export { useBottomSheet } from './BottomSheetContext';
 export {
-	useBottomSheetContent,
-	useBottomSheetModal,
-	useBottomSheetModalMethods,
+    useBottomSheetContent,
+    useBottomSheetModal,
+    useBottomSheetModalMethods
 } from './BottomSheetContentContext';
+export { useBottomSheet } from './BottomSheetContext';
 export { BottomSheetModal } from './BottomSheetModal';
+export { BottomSheetProvider } from './BottomSheetProvider';
 export {
-	BottomSheetView,
-	BottomSheetScrollView,
-	BottomSheetFlatList,
-	BottomSheetSectionList,
-	BottomSheetFlashList,
-	BottomSheetTextInput,
+    BottomSheetFlashList, BottomSheetFlatList, BottomSheetScrollView, BottomSheetSectionList, BottomSheetTextInput, BottomSheetView
 } from './BottomSheetScrollables';
+export { DEFAULT_LAYOUT_OPTIONS, mergeLayoutOptions } from './mergeLayoutOptions';
 export type {
-	BottomSheetMode,
-	BottomSheetDetent,
-	BottomSheetDetentPreset,
-	SnapPoint,
-	BottomSheetControllerApi,
-	BottomSheetModalRef,
-	BottomSheetModalProps,
-	BottomSheetContentContextValue,
-	BottomSheetContextValue,
-	BottomSheetOptions,
-	BottomSheetProviderProps,
-	BottomSheetTheme,
-	BottomSheetLayoutOptions,
-	BottomSheetLayoutMotionOptions,
-	BottomSheetLayoutPresentationOptions,
-	BottomSheetLayoutPushOptions,
-	BottomSheetLayoutStackOptions,
-	BottomSheetLayoutGesturesOptions,
-	BottomSheetLayoutHandleOptions,
-	BottomSheetLayoutScrollOptions,
-	BottomSheetLayoutDetentsOptions,
-	BottomSheetSpringOptions,
-	BottomSheetKeyboardBehavior,
-	BottomSheetKeyboardBlurBehavior,
+    BottomSheetContentContextValue,
+    BottomSheetContextValue, BottomSheetControllerApi, BottomSheetDetent,
+    BottomSheetDetentPreset, BottomSheetKeyboardBehavior,
+    BottomSheetKeyboardBlurBehavior, BottomSheetLayoutDetentsOptions, BottomSheetLayoutGesturesOptions,
+    BottomSheetLayoutHandleOptions, BottomSheetLayoutMotionOptions, BottomSheetLayoutOptions, BottomSheetLayoutPresentationOptions,
+    BottomSheetLayoutPushOptions, BottomSheetLayoutScrollOptions, BottomSheetLayoutStackOptions, BottomSheetModalProps, BottomSheetModalRef, BottomSheetMode, BottomSheetOptions,
+    BottomSheetProviderProps, BottomSheetSpringOptions, BottomSheetTheme, PushDirection, SnapPoint
 } from './types';
+

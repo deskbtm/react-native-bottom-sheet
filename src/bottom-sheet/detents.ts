@@ -1,4 +1,5 @@
 import { DETENT_FRACTIONS } from './constants';
+import { PUSH_DIRECTION_JS, type PushDirectionJs } from './pushDirection';
 import type { BottomSheetDetent, BottomSheetLayoutDetentsOptions } from './types';
 
 function resolveDetentFraction(
@@ -36,6 +37,46 @@ export function getDetentTranslateY(
 ): number {
 	'worklet';
 	return screenHeight - getDetentHeight(detent, screenHeight, topInset, fractions);
+}
+
+/** Fully dismissed top Y for top-down push (sheet off-screen above, immersive). */
+export function getPushClosedTopY(
+	pushDirection: PushDirectionJs,
+	screenHeight: number,
+	_topInset: number,
+): number {
+	'worklet';
+	if (pushDirection === PUSH_DIRECTION_JS.top) {
+		return -screenHeight;
+	}
+	return screenHeight;
+}
+
+/** Open detent top Y for push mode. Top-down is always y=0 (immersive, under status bar). */
+export function getPushDetentTopY(
+	detent: BottomSheetDetent,
+	pushDirection: PushDirectionJs,
+	screenHeight: number,
+	topInset: number,
+	fractions: BottomSheetLayoutDetentsOptions = DETENT_FRACTIONS,
+): number {
+	'worklet';
+	if (pushDirection === PUSH_DIRECTION_JS.top) {
+		return 0;
+	}
+	return getDetentTranslateY(detent, screenHeight, topInset, fractions);
+}
+
+export function getPushOpenTopY(
+	pushDirection: PushDirectionJs,
+	_screenHeight: number,
+	_topInset: number,
+): number {
+	'worklet';
+	if (pushDirection === PUSH_DIRECTION_JS.top) {
+		return 0;
+	}
+	return _screenHeight;
 }
 
 export function findNearestDetentIndex(

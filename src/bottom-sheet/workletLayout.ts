@@ -1,3 +1,4 @@
+import { pushDirectionToJs, type PushDirectionJs } from './pushDirection';
 import type { BottomSheetLayoutDetentsOptions, BottomSheetLayoutOptions } from './types';
 
 /** Flat primitive layout values safe to capture in Reanimated worklet closures. */
@@ -6,6 +7,7 @@ export interface WorkletLayoutScalars {
 	presentationCornerRadius: number;
 	presentationHostTopInsetMin: number;
 	pushHostHorizontalInset: number;
+	pushDirectionJs: PushDirectionJs;
 	stackScalePerLevel: number;
 	stackHorizontalInsetPerLevel: number;
 	stackOffsetYPerLevel: number;
@@ -33,6 +35,7 @@ export function pickWorkletLayoutScalars(
 		presentationCornerRadius: presentation.cornerRadius,
 		presentationHostTopInsetMin: presentation.hostTopInsetMin,
 		pushHostHorizontalInset: push.hostHorizontalInset,
+		pushDirectionJs: pushDirectionToJs(push.direction),
 		stackScalePerLevel: stack.scalePerLevel,
 		stackHorizontalInsetPerLevel: stack.horizontalInsetPerLevel,
 		stackOffsetYPerLevel: stack.offsetYPerLevel,

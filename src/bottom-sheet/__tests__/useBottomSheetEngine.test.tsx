@@ -2,6 +2,7 @@ import { cleanup, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import { PRESENTATION_HOST_SCALE } from '../constants';
+import { HOST_LAYOUT_MODE } from '../hostLayoutMode';
 import { DEFAULT_LAYOUT_OPTIONS } from '../mergeLayoutOptions';
 import type { BottomSheetEngine } from '../useBottomSheetEngine';
 import { useBottomSheetEngine } from '../useBottomSheetEngine';
@@ -131,6 +132,18 @@ describe('useBottomSheetEngine', () => {
 		expect(onDismiss).toHaveBeenCalledTimes(1);
 		expect(engineRef.current!.sheetsRef.current).toHaveLength(0);
 		expect(engineRef.current!.sheetStore.getSnapshot().isPresented).toBe(false);
+	});
+
+	test('activeHostMode follows the top sheet so presentation host styling is preserved', async () => {
+		const engineRef: { current: BottomSheetEngine | null } = { current: null };
+
+		await renderEngine(engineRef);
+
+		engineRef.current!.present(<Text>Push</Text>, { mode: 'push' });
+		expect(engineRef.current!.activeHostMode.value).toBe(HOST_LAYOUT_MODE.pushBottom);
+
+		engineRef.current!.present(<Text>Presentation</Text>, { mode: 'presentation' });
+		expect(engineRef.current!.activeHostMode.value).toBe(HOST_LAYOUT_MODE.presentation);
 	});
 
 	test('dismissAll starts closing from the top sheet', async () => {

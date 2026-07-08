@@ -1,6 +1,6 @@
-import type { GestureType } from 'react-native-gesture-handler';
 import type { ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
+import type { GestureType } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
 /**
@@ -8,9 +8,12 @@ import type { SharedValue } from 'react-native-reanimated';
  *
  * - `presentation` — iOS-style: scales the app behind the sheet, letterbox, stacked card peek.
  * - `modal` — standard overlay: app stays full size, dimmed scrim, flat stacked sheets.
- * - `push` — translates the entire app upward by the sheet height with rounded corners and a gap; no scale.
+ * - `push` — pushes the host away from the sheet (default from bottom; optional top-down via `pushDirection`).
  */
 export type BottomSheetMode = 'presentation' | 'modal' | 'push';
+
+/** Which screen edge the sheet pushes from in `push` mode. */
+export type PushDirection = 'bottom' | 'top';
 
 /** Built-in snap heights: 50%, 90%, and full screen. */
 export type BottomSheetDetentPreset = 'medium' | 'large' | 'full';
@@ -50,6 +53,8 @@ export interface BottomSheetTheme {
 export interface BottomSheetOptions {
 	/** Host mode override; falls back to `BottomSheetProvider` `mode`. */
 	mode?: BottomSheetMode;
+	/** Push edge override; falls back to Provider `sheet.pushDirection`, then `layout.push.direction`. */
+	pushDirection?: PushDirection;
 	snapPoints?: BottomSheetDetent[];
 	index?: number;
 	enableDynamicSizing?: boolean;
@@ -76,6 +81,7 @@ export interface BottomSheetOptions {
 /** Fully merged options used internally after provider defaults and resolution. */
 export interface ResolvedBottomSheetOptions {
 	mode: BottomSheetMode;
+	pushDirection: PushDirection;
 	snapPoints: BottomSheetDetent[];
 	index: number;
 	enableDynamicSizing: boolean;
@@ -169,6 +175,8 @@ export interface BottomSheetLayoutPresentationOptions {
 /** Push mode horizontal inset between host and sheet. */
 export interface BottomSheetLayoutPushOptions {
 	hostHorizontalInset: number;
+	/** Default push edge for `mode: 'push'` sheets. Overridable per sheet via `pushDirection`. */
+	direction: PushDirection;
 }
 
 /** Stacked sheet card peek styling per depth level. */

@@ -66,6 +66,9 @@ export function BottomSheetOverlayHost({ engine }: BottomSheetOverlayHostProps) 
 					pushProgressOpenY={
 						syncHostSheetTopY && index === 0 ? engine.pushProgressOpenY : undefined
 					}
+					pushSheetHeight={
+						syncHostSheetTopY && index === 0 ? engine.pushSheetHeight : undefined
+					}
 					onDismissComplete={engine.handleDismissComplete}
 					onDismissHandlerChange={engine.handleDismissHandlerChange}
 					onControllerReady={engine.handleControllerReady}

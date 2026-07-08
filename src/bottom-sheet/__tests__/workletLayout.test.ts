@@ -28,6 +28,7 @@ describe('workletLayout', () => {
 		expect(scalars.presentationCornerRadius).toBe(presentation.cornerRadius);
 		expect(scalars.presentationHostTopInsetMin).toBe(presentation.hostTopInsetMin);
 		expect(scalars.pushHostHorizontalInset).toBe(push.hostHorizontalInset);
+		expect(scalars.pushDirectionJs).toBe(0);
 		expect(scalars.stackScalePerLevel).toBe(stack.scalePerLevel);
 		expect(scalars.stackHorizontalInsetPerLevel).toBe(stack.horizontalInsetPerLevel);
 		expect(scalars.stackOffsetYPerLevel).toBe(stack.offsetYPerLevel);

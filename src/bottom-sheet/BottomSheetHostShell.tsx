@@ -1,6 +1,7 @@
 import { memo, type ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BottomSheetHost } from './BottomSheetHost';
 import type { HostLayoutMode } from './hostLayoutMode';
@@ -12,6 +13,7 @@ export interface BottomSheetHostShellProps {
 	progress: SharedValue<number>;
 	sheetTopY: SharedValue<number>;
 	pushProgressOpenY: SharedValue<number>;
+	pushSheetHeight: SharedValue<number>;
 	screenHeight: number;
 	screenWidth: number;
 	layout: BottomSheetLayoutOptions;
@@ -27,16 +29,21 @@ function BottomSheetHostShellInner({
 	progress,
 	sheetTopY,
 	pushProgressOpenY,
+	pushSheetHeight,
 	screenHeight,
 	screenWidth,
 	layout,
 }: BottomSheetHostShellProps) {
+	const insets = useSafeAreaInsets();
+
 	return (
 		<BottomSheetHost
 			hostLayoutMode={hostLayoutMode}
 			progress={progress}
 			sheetTopY={sheetTopY}
 			pushProgressOpenY={pushProgressOpenY}
+			pushSheetHeight={pushSheetHeight}
+			topInset={insets.top}
 			screenHeight={screenHeight}
 			screenWidth={screenWidth}
 			layout={layout}

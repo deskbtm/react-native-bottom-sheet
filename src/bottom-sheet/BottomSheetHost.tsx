@@ -9,12 +9,15 @@ import Animated, {
 import { getPresentationHostTopInset, PRESENTATION_TRANSFORM_ORIGIN } from './constants';
 import { HOST_LAYOUT_MODE, type HostLayoutMode } from './hostLayoutMode';
 import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
+import { PUSH_DIRECTION_JS } from './pushDirection';
 import {
 	getBottomSheetCornerRadius,
-	getPushHostPushUpFromSheetTopY,
+	getPushHostCornerRadiusStyle,
+	getPushHostOffsetFromSheetTopY,
 	getPushLayoutProgress,
 	getPushScale,
-	PUSH_TRANSFORM_ORIGIN,
+	getPushSheetHeightForDetent,
+	getPushTransformOrigin,
 } from './pushLayout';
 import type { BottomSheetLayoutOptions } from './types';
 import { pickWorkletLayoutScalars } from './workletLayout';
@@ -25,6 +28,8 @@ interface BottomSheetHostProps {
 	progress: SharedValue<number>;
 	sheetTopY: SharedValue<number>;
 	pushProgressOpenY?: SharedValue<number>;
+	pushSheetHeight?: SharedValue<number>;
+	topInset: number;
 	screenHeight: number;
 	screenWidth: number;
 	layout?: BottomSheetLayoutOptions;
@@ -38,6 +43,8 @@ export function BottomSheetHost({
 	progress,
 	sheetTopY,
 	pushProgressOpenY,
+	pushSheetHeight,
+	topInset,
 	screenHeight,
 	screenWidth,
 	layout = DEFAULT_LAYOUT_OPTIONS,
@@ -49,28 +56,49 @@ export function BottomSheetHost({
 	const animatedStyle = useAnimatedStyle(() => {
 		const mode = hostLayoutMode.value;
 
-		if (mode === HOST_LAYOUT_MODE.push && pushProgressOpenY) {
+		if (
+			(mode === HOST_LAYOUT_MODE.pushBottom || mode === HOST_LAYOUT_MODE.pushTop) &&
+			pushProgressOpenY
+		) {
+			const pushDirectionJs =
+				mode === HOST_LAYOUT_MODE.pushTop
+					? PUSH_DIRECTION_JS.top
+					: PUSH_DIRECTION_JS.bottom;
+			const pushLayoutTopInset = pushDirectionJs === PUSH_DIRECTION_JS.top ? 0 : topInset;
 			const topY = sheetTopY.value;
 			const openY = pushProgressOpenY.value;
-			const pushProgress = getPushLayoutProgress(topY, openY, screenHeight);
-			const radius = getBottomSheetCornerRadius(
-				pushProgress,
-				scalars.presentationCornerRadius,
+			const sheetHeight =
+				pushDirectionJs === PUSH_DIRECTION_JS.top
+					? (pushSheetHeight?.value ??
+						getPushSheetHeightForDetent('medium', screenHeight, 0))
+					: Math.max(0, screenHeight - topY);
+			const pushProgress = getPushLayoutProgress(
+				topY,
+				openY,
+				screenHeight,
+				pushDirectionJs,
+				pushLayoutTopInset,
 			);
-			const pushUp = getPushHostPushUpFromSheetTopY(
+			const hostOffset = getPushHostOffsetFromSheetTopY(
 				screenWidth,
 				screenHeight,
 				topY,
 				openY,
+				pushDirectionJs,
+				pushLayoutTopInset,
+				sheetHeight,
 				scalars.pushHostHorizontalInset,
 			);
 
 			return {
-				borderBottomLeftRadius: radius,
-				borderBottomRightRadius: radius,
-				transformOrigin: PUSH_TRANSFORM_ORIGIN,
+				...getPushHostCornerRadiusStyle(
+					pushProgress,
+					pushDirectionJs,
+					scalars.presentationCornerRadius,
+				),
+				transformOrigin: getPushTransformOrigin(pushDirectionJs),
 				transform: [
-					{ translateY: -pushUp },
+					{ translateY: hostOffset },
 					{
 						scale: getPushScale(
 							screenWidth,
@@ -83,6 +111,11 @@ export function BottomSheetHost({
 		}
 
 		if (mode === HOST_LAYOUT_MODE.presentation) {
+			const radius = getBottomSheetCornerRadius(
+				progress.value,
+				scalars.presentationCornerRadius,
+			);
+
 			return {
 				transformOrigin: PRESENTATION_TRANSFORM_ORIGIN,
 				transform: [
@@ -108,14 +141,21 @@ export function BottomSheetHost({
 						),
 					},
 				],
-				borderRadius: getBottomSheetCornerRadius(
-					progress.value,
-					scalars.presentationCornerRadius,
-				),
+				borderRadius: radius,
+				borderTopLeftRadius: radius,
+				borderTopRightRadius: radius,
+				borderBottomLeftRadius: radius,
+				borderBottomRightRadius: radius,
 			};
 		}
 
-		return {};
+		return {
+			borderRadius: 0,
+			borderTopLeftRadius: 0,
+			borderTopRightRadius: 0,
+			borderBottomLeftRadius: 0,
+			borderBottomRightRadius: 0,
+		};
 	});
 
 	return (

@@ -1,15 +1,17 @@
 import { useAnimatedStyle, type SharedValue } from 'react-native-reanimated';
 
 import { DEFAULT_LAYOUT_OPTIONS } from './mergeLayoutOptions';
+import { pushDirectionToJs } from './pushDirection';
 import {
-	getBottomSheetCornerRadius,
 	getPushLayoutProgress,
 	getPushScale,
+	getPushSheetCornerRadiusStyle,
+	getPushTransformOrigin,
 } from './pushLayout';
-import type { BottomSheetLayoutOptions } from './types';
+import type { BottomSheetLayoutOptions, PushDirection } from './types';
 import { pickWorkletLayoutScalars } from './workletLayout';
 
-/** Sheet uses horizontal scale only — bottom stays flush; side inset matches host. */
+/** Sheet uses horizontal scale only — anchored edge stays flush; side inset matches host. */
 export function usePushSheetScaleStyle(
 	sheetTopY: SharedValue<number>,
 	pushProgressOpenY: SharedValue<number>,
@@ -17,8 +19,11 @@ export function usePushSheetScaleStyle(
 	screenWidth: number,
 	enabled: boolean,
 	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
+	pushDirection: PushDirection = 'bottom',
+	topInset: number = 0,
 ) {
 	const scalars = pickWorkletLayoutScalars(layout);
+	const pushDirectionJs = pushDirectionToJs(pushDirection);
 
 	return useAnimatedStyle(() => {
 		if (!enabled) {
@@ -29,6 +34,8 @@ export function usePushSheetScaleStyle(
 			sheetTopY.value,
 			pushProgressOpenY.value,
 			screenHeight,
+			pushDirectionJs,
+			topInset,
 		);
 		const scale = getPushScale(screenWidth, progress, scalars.pushHostHorizontalInset);
 
@@ -37,19 +44,23 @@ export function usePushSheetScaleStyle(
 			flex: 1,
 			alignSelf: 'center',
 			transform: [{ scaleX: scale }],
+			transformOrigin: getPushTransformOrigin(pushDirectionJs),
 		};
 	});
 }
 
-/** Top corner radius for the sheet card in `push` mode (same constant as host). */
+/** Corner radius for the sheet card in `push` mode (mirrors host edge). */
 export function usePushSheetCardStyle(
 	sheetTopY: SharedValue<number>,
 	pushProgressOpenY: SharedValue<number>,
 	screenHeight: number,
 	enabled: boolean,
 	layout: BottomSheetLayoutOptions = DEFAULT_LAYOUT_OPTIONS,
+	pushDirection: PushDirection = 'bottom',
+	topInset: number = 0,
 ) {
 	const scalars = pickWorkletLayoutScalars(layout);
+	const pushDirectionJs = pushDirectionToJs(pushDirection);
 
 	return useAnimatedStyle(() => {
 		if (!enabled) {
@@ -60,14 +71,18 @@ export function usePushSheetCardStyle(
 			sheetTopY.value,
 			pushProgressOpenY.value,
 			screenHeight,
+			pushDirectionJs,
+			topInset,
 		);
-		const radius = getBottomSheetCornerRadius(progress, scalars.presentationCornerRadius);
 
 		return {
 			flex: 1,
-			borderTopLeftRadius: radius,
-			borderTopRightRadius: radius,
 			overflow: 'hidden',
+			...getPushSheetCornerRadiusStyle(
+				progress,
+				pushDirectionJs,
+				scalars.presentationCornerRadius,
+			),
 		};
 	});
 }

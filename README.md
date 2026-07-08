@@ -222,12 +222,20 @@ Override per sheet with `mode` in options, or set a default on the provider:
 | -------------- | ------------------------------------------------------------------------------------------------ |
 | `presentation` | iOS-style: host scales down, letterbox bars, stacked card peek                                   |
 | `modal`        | Standard overlay with dimmed scrim; host stays full size                                         |
-| `push`         | Custom host-lift layout: app moves up behind the sheet with matched corner radius and side inset |
+| `push`         | Host-lift layout: sheet pushes the app away with matched corner radius and side inset (default: bottom-up) |
 
 ```tsx
-// Push mode — host slides up with the sheet
+// Push mode — host slides up with the sheet (default bottom-up)
 present(<PushSheetContent />, {
 	mode: 'push',
+	snapPoints: ['35%', '70%', 'full'],
+	index: 0,
+});
+
+// Top-down push — sheet enters from the top; handle renders at the sheet bottom
+present(<PushSheetContent />, {
+	mode: 'push',
+	pushDirection: 'top',
 	snapPoints: ['35%', '70%', 'full'],
 	index: 0,
 });
@@ -307,7 +315,7 @@ present(<FormSheet />, {
 
 ### Stacking sheets
 
-Each `present()` pushes another sheet onto the overlay stack. Host motion follows the **bottom** sheet. In `presentation` mode, buried sheets show iOS-style card inset and scale.
+Each `present()` pushes another sheet onto the overlay stack. Host motion follows the **bottom** sheet (index 0), including its `pushDirection` when `mode: 'push'`. In `presentation` mode, buried sheets show iOS-style card inset and scale.
 
 ```tsx
 present(<SheetA />, { snapPoints: ['30%'] });

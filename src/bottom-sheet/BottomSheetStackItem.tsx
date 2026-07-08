@@ -2,10 +2,10 @@ import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 
 import { BottomSheetOverlay } from './BottomSheetOverlay';
 import type {
-	BottomSheetControllerApi,
-	BottomSheetLayoutOptions,
-	BottomSheetMode,
-	BottomSheetState,
+    BottomSheetControllerApi,
+    BottomSheetLayoutOptions,
+    BottomSheetMode,
+    BottomSheetState,
 } from './types';
 
 interface BottomSheetStackItemProps {
@@ -18,6 +18,7 @@ interface BottomSheetStackItemProps {
 	/** Top edge of the bottom sheet; drives host push layout. */
 	hostSheetTopY?: SharedValue<number>;
 	pushProgressOpenY?: SharedValue<number>;
+	pushSheetHeight?: SharedValue<number>;
 	onDismissComplete: (id: string) => void;
 	onDismissHandlerChange: (id: string, handler: (() => void) | undefined) => void;
 	onControllerReady: (
@@ -35,6 +36,7 @@ export function BottomSheetStackItem({
 	bottomProgress,
 	hostSheetTopY,
 	pushProgressOpenY,
+	pushSheetHeight,
 	onDismissComplete,
 	onDismissHandlerChange,
 	onControllerReady,
@@ -53,6 +55,7 @@ export function BottomSheetStackItem({
 			progress={progress}
 			hostSheetTopY={hostSheetTopY}
 			pushProgressOpenY={pushProgressOpenY}
+			pushSheetHeight={pushSheetHeight}
 			stackIndex={stackIndex}
 			stackSize={stackSize}
 			depthFromTop={depthFromTop}

@@ -9,7 +9,7 @@ Per-sheet behavior when a sheet opens — snap points, keyboard handling, pan ge
 _Avoid_: defaultOptions
 
 **Layout options**:
-Provider-wide physical parameters passed as the `layout` prop on `BottomSheetProvider`. Grouped as `motion`, `presentation`, `push`, `stack`, `gestures`, `handle`, `scroll`, and `detents`. Defaults come from `constants.ts` via `DEFAULT_LAYOUT_OPTIONS`. Partial values are deep-merged with defaults. Read once at Provider mount; not updated if the prop changes later.
+Provider-wide physical parameters passed as the `layout` prop on `BottomSheetProvider`. Grouped as `motion`, `presentation`, `push`, `stack`, `gestures`, `handle`, `scroll`, and `detents`. Defaults come from `constants.ts` via `DEFAULT_LAYOUT_OPTIONS`. Partial values are deep-merged with defaults. Read once at Provider mount; not updated if the prop changes later. Per-sheet `pushDirection` on `present()` / `BottomSheetModal` overrides `layout.push.direction` for that sheet only.
 _Avoid_: config, constants, engine options
 
 **Theme**:

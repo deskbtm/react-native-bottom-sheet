@@ -13,7 +13,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import { createBottomSheetSheetStore } from './bottomSheetSheetStore';
 import { DEFAULT_THEME } from './constants';
 import { createBottomSheetId } from './createBottomSheetId';
-import { bottomSheetModeToLayoutJs, type HostLayoutMode } from './hostLayoutMode';
+import { resolveHostLayoutMode, type HostLayoutMode } from './hostLayoutMode';
 import { mergeLayoutOptions } from './mergeLayoutOptions';
 import { resolveBottomSheetOptions } from './resolveOptions';
 import type {
@@ -34,6 +34,8 @@ export interface BottomSheetEngine {
 	hostSheetTopY: ReturnType<typeof useSharedValue<number>>;
 	/** Push detent open Y — paired with {@link hostSheetTopY} for progress on the UI thread. */
 	pushProgressOpenY: ReturnType<typeof useSharedValue<number>>;
+	/** Active push sheet panel height — used for top-down host offset math. */
+	pushSheetHeight: ReturnType<typeof useSharedValue<number>>;
 	activeHostMode: ReturnType<typeof useSharedValue<HostLayoutMode>>;
 	sheetStore: ReturnType<typeof createBottomSheetSheetStore>;
 	sheetsRef: RefObject<BottomSheetState[]>;
@@ -70,7 +72,8 @@ export function useBottomSheetEngine({
 	const bottomProgress = useSharedValue(0);
 	const hostSheetTopY = useSharedValue(screenHeight);
 	const pushProgressOpenY = useSharedValue(screenHeight);
-	const activeHostMode = useSharedValue(bottomSheetModeToLayoutJs(hostMode));
+	const pushSheetHeight = useSharedValue(0);
+	const activeHostMode = useSharedValue(resolveHostLayoutMode(hostMode));
 
 	const sheetStore = useMemo(() => createBottomSheetSheetStore(), []);
 	const sheetsRef = useRef<BottomSheetState[]>([]);
@@ -83,15 +86,20 @@ export function useBottomSheetEngine({
 	useEffect(() => {
 		hostSheetTopY.value = screenHeight;
 		pushProgressOpenY.value = screenHeight;
-	}, [hostSheetTopY, pushProgressOpenY, screenHeight]);
+		pushSheetHeight.value = 0;
+	}, [hostSheetTopY, pushProgressOpenY, pushSheetHeight, screenHeight]);
 
 	const syncSheetStore = useCallback(
 		(sheets: BottomSheetState[]) => {
 			sheetsRef.current = sheets;
 			const topSheet = sheets.length > 0 ? sheets[sheets.length - 1] : null;
-			activeHostMode.value = bottomSheetModeToLayoutJs(
-				topSheet?.options.mode ?? hostMode,
-			);
+			const drivingSheet = sheets.length > 0 ? sheets[0] : null;
+			const layoutMode = topSheet?.options.mode ?? hostMode;
+			const pushDirection =
+				drivingSheet?.options.pushDirection ??
+				topSheet?.options.pushDirection ??
+				mergedLayout.push.direction;
+			activeHostMode.value = resolveHostLayoutMode(layoutMode, pushDirection);
 			sheetStore.setSnapshot({
 				isPresented: sheets.length > 0,
 				presentedSheetCount: sheets.length,
@@ -101,7 +109,7 @@ export function useBottomSheetEngine({
 					: null,
 			});
 		},
-		[activeHostMode, hostMode, sheetStore],
+		[activeHostMode, hostMode, mergedLayout.push.direction, sheetStore],
 	);
 
 	const commitSheets = useCallback(
@@ -146,6 +154,7 @@ export function useBottomSheetEngine({
 				bottomProgress.value = 0;
 				hostSheetTopY.value = screenHeight;
 				pushProgressOpenY.value = screenHeight;
+				pushSheetHeight.value = 0;
 				dismissingAllRef.current = false;
 			}
 
@@ -157,7 +166,14 @@ export function useBottomSheetEngine({
 				});
 			}
 		},
-		[bottomProgress, commitSheets, hostSheetTopY, pushProgressOpenY, screenHeight],
+		[
+			bottomProgress,
+			commitSheets,
+			hostSheetTopY,
+			pushProgressOpenY,
+			pushSheetHeight,
+			screenHeight,
+		],
 	);
 
 	const handleDismissHandlerChange = useCallback(
@@ -207,13 +223,39 @@ export function useBottomSheetEngine({
 	const present = useCallback(
 		(content: React.ReactNode, options?: BottomSheetOptions): string => {
 			const id = options?.sheetId ?? createBottomSheetId();
-			const resolved = resolveBottomSheetOptions(options, sheet, theme, hostMode);
+			const resolved = resolveBottomSheetOptions(
+				options,
+				sheet,
+				theme,
+				hostMode,
+				mergedLayout.push.direction,
+			);
 			const entry: BottomSheetState = { id, content, options: resolved };
 			const prev = sheetsRef.current;
+			if (prev.length === 0 && resolved.mode === 'push') {
+				if (resolved.pushDirection === 'top') {
+					hostSheetTopY.value = -screenHeight;
+					pushProgressOpenY.value = 0;
+				} else {
+					hostSheetTopY.value = screenHeight;
+					pushProgressOpenY.value = screenHeight;
+				}
+				pushSheetHeight.value = 0;
+			}
 			commitSheets([...prev.filter((sheet) => sheet.id !== id), entry]);
 			return id;
 		},
-		[commitSheets, hostMode, sheet, theme],
+		[
+			commitSheets,
+			hostMode,
+			hostSheetTopY,
+			mergedLayout.push.direction,
+			pushProgressOpenY,
+			pushSheetHeight,
+			screenHeight,
+			sheet,
+			theme,
+		],
 	);
 
 	const register = useCallback((modal: RegisteredBottomSheetModal) => {
@@ -232,6 +274,7 @@ export function useBottomSheetEngine({
 			bottomProgress,
 			hostSheetTopY,
 			pushProgressOpenY,
+			pushSheetHeight,
 			activeHostMode,
 			sheetStore,
 			sheetsRef,

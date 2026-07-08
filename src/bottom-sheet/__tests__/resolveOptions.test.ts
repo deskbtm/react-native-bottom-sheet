@@ -8,6 +8,7 @@ describe('resolveBottomSheetOptions', () => {
 		expect(resolved.snapPoints).toEqual(['medium', 'large']);
 		expect(resolved.index).toBe(0);
 		expect(resolved.mode).toBe('presentation');
+		expect(resolved.pushDirection).toBe('bottom');
 		expect(resolved.enableDynamicSizing).toBe(false);
 		expect(resolved.enablePanDownToClose).toBe(true);
 		expect(resolved.dismissOnScrimPress).toBe(true);
@@ -61,6 +62,34 @@ describe('resolveBottomSheetOptions', () => {
 		);
 
 		expect(resolved.mode).toBe('push');
+	});
+
+	test('merges pushDirection from sheet, provider defaults, and layout fallback', () => {
+		const fromSheet = resolveBottomSheetOptions(
+			{ pushDirection: 'top' },
+			{ pushDirection: 'bottom' },
+			undefined,
+			'presentation',
+			'bottom',
+		);
+		const fromProvider = resolveBottomSheetOptions(
+			undefined,
+			{ pushDirection: 'top' },
+			undefined,
+			'presentation',
+			'bottom',
+		);
+		const fromLayout = resolveBottomSheetOptions(
+			undefined,
+			undefined,
+			undefined,
+			'presentation',
+			'top',
+		);
+
+		expect(fromSheet.pushDirection).toBe('top');
+		expect(fromProvider.pushDirection).toBe('top');
+		expect(fromLayout.pushDirection).toBe('top');
 	});
 
 	test('uses empty snap points for dynamic sizing', () => {

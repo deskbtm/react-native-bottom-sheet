@@ -5,7 +5,14 @@ import {
 	type SharedValue,
 } from 'react-native-reanimated';
 
-import { findNearestDetentIndex, getDetentTranslateY } from './detents';
+import {
+	findNearestDetentIndex,
+	getDetentTranslateY,
+	getPushClosedTopY,
+	getPushDetentTopY,
+	getPushOpenTopY,
+} from './detents';
+import { PUSH_DIRECTION_JS, type PushDirectionJs } from './pushDirection';
 import type {
 	BottomSheetDetent,
 	BottomSheetLayoutDetentsOptions,
@@ -32,14 +39,23 @@ export function applySheetDragUpdate(
 	topInset: number,
 	detents: BottomSheetLayoutDetentsOptions,
 	isPushLayout: boolean,
+	pushDirection: PushDirectionJs,
 ): void {
 	'worklet';
 	const nextY = dragStartY + translationY;
-	const minY = getDetentTranslateY('full', screenHeight, topInset, detents);
-	sheetTranslateY.value = Math.max(nextY, minY);
 
-	const openY = getDetentTranslateY(
+	if (pushDirection === PUSH_DIRECTION_JS.top) {
+		const closedY = getPushClosedTopY(pushDirection, screenHeight, topInset);
+		const maxY = getPushOpenTopY(pushDirection, screenHeight, topInset);
+		sheetTranslateY.value = Math.min(Math.max(nextY, closedY), maxY);
+	} else {
+		const minY = getDetentTranslateY('full', screenHeight, topInset, detents);
+		sheetTranslateY.value = Math.max(nextY, minY);
+	}
+
+	const openY = getPushDetentTopY(
 		effectiveSnapPoints[activeDetentIndex.value],
+		pushDirection,
 		screenHeight,
 		topInset,
 		detents,
@@ -47,9 +63,10 @@ export function applySheetDragUpdate(
 	if (isPushLayout && pushProgressOpenY) {
 		pushProgressOpenY.value = openY;
 	} else {
+		const closedY = getPushClosedTopY(pushDirection, screenHeight, topInset);
 		progress.value = interpolate(
 			sheetTranslateY.value,
-			[screenHeight, openY],
+			[closedY, openY],
 			[0, 1],
 			Extrapolation.CLAMP,
 		);
@@ -68,8 +85,67 @@ export function resolveSheetPanEnd(
 	dismissVelocityThreshold: number,
 	detentVelocityThreshold: number,
 	enablePanDownToClose: boolean,
+	pushDirection: PushDirectionJs,
 ): SheetPanEndResult {
 	'worklet';
+	const isTopPush = pushDirection === PUSH_DIRECTION_JS.top;
+	const openY = getPushDetentTopY(
+		effectiveSnapPoints[currentIndex],
+		pushDirection,
+		screenHeight,
+		topInset,
+		detents,
+	);
+
+	if (isTopPush) {
+		const dismissY = openY - dismissDragThreshold;
+		if (
+			enablePanDownToClose &&
+			(currentY < dismissY || velocityY < -dismissVelocityThreshold)
+		) {
+			return { kind: 'dismiss', targetIndex: currentIndex, targetY: currentY };
+		}
+
+		if (
+			velocityY > detentVelocityThreshold &&
+			currentIndex < effectiveSnapPoints.length - 1
+		) {
+			const nextIndex = currentIndex + 1;
+			return {
+				kind: 'snap',
+				targetIndex: nextIndex,
+				targetY: getPushDetentTopY(
+					effectiveSnapPoints[nextIndex],
+					pushDirection,
+					screenHeight,
+					topInset,
+					detents,
+				),
+			};
+		}
+
+		if (velocityY < -detentVelocityThreshold && currentIndex > 0) {
+			const prevIndex = currentIndex - 1;
+			return {
+				kind: 'snap',
+				targetIndex: prevIndex,
+				targetY: getPushDetentTopY(
+					effectiveSnapPoints[prevIndex],
+					pushDirection,
+					screenHeight,
+					topInset,
+					detents,
+				),
+			};
+		}
+
+		return {
+			kind: 'snap',
+			targetIndex: currentIndex,
+			targetY: openY,
+		};
+	}
+
 	const dismissY =
 		getDetentTranslateY(effectiveSnapPoints[0], screenHeight, topInset, detents) +
 		dismissDragThreshold;

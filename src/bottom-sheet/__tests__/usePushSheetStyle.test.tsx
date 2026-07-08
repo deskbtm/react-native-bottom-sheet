@@ -139,4 +139,30 @@ describe('usePushSheetCardStyle', () => {
 			borderTopRightRadius: 32,
 		});
 	});
+
+	test('uses bottom corner radius for top push sheets', async () => {
+		const styleRef: { current: PushSheetCardStyle | null } = { current: null };
+
+		function TopPushProbe() {
+			const sheetTop = createSharedValue(0);
+			const pushProgressOpenY = createSharedValue(0);
+			styleRef.current = usePushSheetCardStyle(
+				sheetTop,
+				pushProgressOpenY,
+				SCREEN_HEIGHT,
+				true,
+				undefined,
+				'top',
+				0,
+			);
+			return null;
+		}
+
+		await render(<TopPushProbe />);
+
+		expect(styleRef.current).toMatchObject({
+			borderBottomLeftRadius: BOTTOM_SHEET_CORNER_RADIUS,
+			borderBottomRightRadius: BOTTOM_SHEET_CORNER_RADIUS,
+		});
+	});
 });

@@ -30,6 +30,7 @@ interface BottomSheetOverlayProps {
 	progress: SharedValue<number>;
 	hostSheetTopY?: SharedValue<number>;
 	pushProgressOpenY?: SharedValue<number>;
+	pushSheetHeight?: SharedValue<number>;
 	stackIndex?: number;
 	stackSize?: number;
 	depthFromTop?: number;
@@ -47,6 +48,7 @@ export function BottomSheetOverlay({
 	progress,
 	hostSheetTopY,
 	pushProgressOpenY,
+	pushSheetHeight,
 	stackIndex = 0,
 	depthFromTop = 0,
 	enableStackCardStyle = true,
@@ -57,12 +59,13 @@ export function BottomSheetOverlay({
 	layout = DEFAULT_LAYOUT_OPTIONS,
 }: BottomSheetOverlayProps) {
 	const { height: screenHeight, width: screenWidth } = useWindowDimensions();
-	const idlePushProgressOpenY = useSharedValue(screenHeight);
 	const insets = useSafeAreaInsets();
 	const { options, content: sheetContent } = sheet;
 	const { theme } = options;
 	const isPushLayout = options.mode === 'push';
+	const isTopPush = isPushLayout && options.pushDirection === 'top';
 	const layoutScalars = useMemo(() => pickWorkletLayoutScalars(layout), [layout]);
+	const idlePushProgressOpenY = useSharedValue(isTopPush ? 0 : screenHeight);
 
 	const controller = useBottomSheetController({
 		options,
@@ -70,6 +73,7 @@ export function BottomSheetOverlay({
 		progress,
 		hostSheetTopY,
 		pushProgressOpenY,
+		pushSheetHeight,
 		screenHeight,
 		topInset: insets.top,
 		bottomInset: insets.bottom,
@@ -110,6 +114,8 @@ export function BottomSheetOverlay({
 		screenWidth,
 		isPushLayout && pushProgressOpenY != null,
 		layout,
+		options.pushDirection,
+		isTopPush ? 0 : insets.top,
 	);
 	const pushSheetCardStyle = usePushSheetCardStyle(
 		animatedPosition,
@@ -117,6 +123,8 @@ export function BottomSheetOverlay({
 		screenHeight,
 		isPushLayout && pushProgressOpenY != null,
 		layout,
+		options.pushDirection,
+		isTopPush ? 0 : insets.top,
 	);
 
 	const internalContextValue = useMemo(
@@ -172,33 +180,45 @@ export function BottomSheetOverlay({
 		<View style={{ height: layoutScalars.handleHiddenHeight }} />
 	);
 
+	const sheetContentArea = enableDynamicSizing ? (
+		<BottomSheetScrollView
+			style={styles.dynamicScroll}
+			contentContainerStyle={styles.dynamicSheetContent}
+			keyboardShouldPersistTaps="handled"
+			scrollEnabled={isTop}
+		>
+			<Animated.View style={dynamicContentPaddingStyle}>{sheetContent}</Animated.View>
+		</BottomSheetScrollView>
+	) : enableContentPanningGesture && isTop ? (
+		<GestureDetector gesture={contentPanGesture}>
+			<Animated.View style={fixedContentWrapperStyle}>{sheetContent}</Animated.View>
+		</GestureDetector>
+	) : (
+		<View style={fixedContentWrapperStyle} pointerEvents={isTop ? 'auto' : 'none'}>
+			{sheetContent}
+		</View>
+	);
+
+	const handleWrapper = isTop ? (
+		<GestureDetector gesture={handlePanGesture}>
+			<Animated.View>{handleArea}</Animated.View>
+		</GestureDetector>
+	) : (
+		<View pointerEvents="none">{handleArea}</View>
+	);
+
 	const sheetBody = (
 		<View style={styles.sheetBody}>
-			{isTop ? (
-				<GestureDetector gesture={handlePanGesture}>
-					<Animated.View>{handleArea}</Animated.View>
-				</GestureDetector>
+			{isTopPush ? (
+				<>
+					{sheetContentArea}
+					{handleWrapper}
+				</>
 			) : (
-				<View pointerEvents="none">{handleArea}</View>
-			)}
-
-			{enableDynamicSizing ? (
-				<BottomSheetScrollView
-					style={styles.dynamicScroll}
-					contentContainerStyle={styles.dynamicSheetContent}
-					keyboardShouldPersistTaps="handled"
-					scrollEnabled={isTop}
-				>
-					<Animated.View style={dynamicContentPaddingStyle}>{sheetContent}</Animated.View>
-				</BottomSheetScrollView>
-			) : enableContentPanningGesture && isTop ? (
-				<GestureDetector gesture={contentPanGesture}>
-					<Animated.View style={fixedContentWrapperStyle}>{sheetContent}</Animated.View>
-				</GestureDetector>
-			) : (
-				<View style={fixedContentWrapperStyle} pointerEvents={isTop ? 'auto' : 'none'}>
-					{sheetContent}
-				</View>
+				<>
+					{handleWrapper}
+					{sheetContentArea}
+				</>
 			)}
 		</View>
 	);

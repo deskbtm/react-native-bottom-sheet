@@ -1,11 +1,12 @@
 import { DEFAULT_ACCESSIBILITY_LABEL, DEFAULT_THEME } from './constants';
 import { clampIndex, findDetentIndex } from './detents';
 import type {
-	BottomSheetDetent,
-	BottomSheetMode,
-	BottomSheetOptions,
-	BottomSheetTheme,
-	ResolvedBottomSheetOptions,
+    BottomSheetDetent,
+    BottomSheetMode,
+    BottomSheetOptions,
+    BottomSheetTheme,
+    PushDirection,
+    ResolvedBottomSheetOptions,
 } from './types';
 
 function mergeTheme(
@@ -24,6 +25,7 @@ export function resolveBottomSheetOptions(
 	providerDefaults?: BottomSheetOptions,
 	providerTheme?: BottomSheetTheme,
 	hostMode: BottomSheetMode = 'presentation',
+	layoutPushDirection: PushDirection = 'bottom',
 ): ResolvedBottomSheetOptions {
 	const merged = {
 		...providerDefaults,
@@ -44,8 +46,15 @@ export function resolveBottomSheetOptions(
 			? findDetentIndex(resolvedSnapPoints, resolvedSnapPoints[0] ?? 'medium')
 			: 0);
 
+	const pushDirection =
+		merged.pushDirection ??
+		providerDefaults?.pushDirection ??
+		layoutPushDirection ??
+		'bottom';
+
 	return {
 		mode: merged.mode ?? providerDefaults?.mode ?? hostMode,
+		pushDirection,
 		snapPoints: resolvedSnapPoints,
 		index:
 			resolvedSnapPoints.length > 0 ? clampIndex(index, resolvedSnapPoints.length) : 0,

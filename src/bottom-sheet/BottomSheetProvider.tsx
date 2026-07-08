@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import {
-	BottomSheetActionsContext,
-	BottomSheetSheetStoreContext,
+    BottomSheetActionsContext,
+    BottomSheetSheetStoreContext,
 } from './BottomSheetContext';
 import { BottomSheetHostShell } from './BottomSheetHostShell';
 import { BottomSheetModalRegistryProvider } from './BottomSheetModalRegistry';
@@ -66,6 +66,7 @@ export function BottomSheetProvider({
 							progress={engine.bottomProgress}
 							sheetTopY={engine.hostSheetTopY}
 							pushProgressOpenY={engine.pushProgressOpenY}
+							pushSheetHeight={engine.pushSheetHeight}
 							screenHeight={engine.screenHeight}
 							screenWidth={engine.screenWidth}
 							layout={engine.mergedLayout}
